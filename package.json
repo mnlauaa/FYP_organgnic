@@ -2,7 +2,7 @@
   "name": "fyp_organgnic",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
     "start": "pm2 start ecosystem.config.json --watch --no-daemon",
     "stop": "pm2 stop ecosystem.config.json",
@@ -23,6 +23,7 @@
     "koa-bodyparser": "^4.2.0",
     "koa-logger": "^3.1.0",
     "koa-router": "^7.3.0",
+    "mysql": "^2.15.0",
     "pm2": "^2.9.1"
   }
 }
