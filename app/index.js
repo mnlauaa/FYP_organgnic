@@ -6,5 +6,14 @@ const db = require('./utils/database').db;
 const app = new Koa();
 
 app.use(bodyParser())
-  .use(routers.routes())
-  .listen(config.port);
+    .use(routers.routes())
+    //catch err
+    .use(async (ctx, next)=>{
+        try {
+            await next()
+        } catch (err) {
+            ctx.body = err.message
+            ctx.status = err.status || 500
+        }
+    }) 
+    .listen(config.port);
