@@ -1,10 +1,10 @@
 const db = require('../utils/database');
+const testModel = require('../models/testModel')
 
 const test ={
     //testing
     async testing(ctx, next){
-        var testing;
-        testing = await db.query('SELECT 1 + 1 AS solution');
+        var testing = await testModel.getTest();
         console.log(testing);
         ctx.body = "testing testing"
       }

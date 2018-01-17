@@ -17,3 +17,4 @@ app.use(bodyParser())
         }
     }) 
     .listen(config.port);
+    console.log("start at localhost:" + config.port + "/");
