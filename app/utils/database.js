@@ -18,6 +18,5 @@ function query(sql, values){
 }
 
 module.exports = {
-    db,
     query
 }

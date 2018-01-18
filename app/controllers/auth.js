@@ -1,6 +1,7 @@
 module.exports = {
     postLogin,
-    postLogout
+    postLogout,
+    postSignUp
 }
 
 async function postLogin(ctx) {
@@ -8,5 +9,9 @@ async function postLogin(ctx) {
 }
 
 async function postLogout(ctx) {
+
+}
+
+async function postSignUp(ctx) {
 
 }
