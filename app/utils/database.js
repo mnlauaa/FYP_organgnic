@@ -17,6 +17,19 @@ function query(sql, values){
     })
 }
 
+function getDataById (table,  id) {
+  let _sql =  "SELECT * FROM ?? WHERE id = ? ";
+  return query( _sql, [ table, id ] );
+}
+
+function selectAll (table) {
+  let  _sql =  "SELECT * FROM ?? ";
+  return query( _sql, [ table ] );
+}
+
+
 module.exports = {
-    query
+    query,
+    getDataById,
+    selectAll
 }
