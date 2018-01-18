@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主機: localhost
--- 產生時間： 2018 年 01 月 18 日 07:38
+-- 產生時間： 2018 年 01 月 18 日 08:04
 -- 伺服器版本: 10.1.19-MariaDB
 -- PHP 版本： 5.6.28
 
@@ -30,14 +30,12 @@ CREATE TABLE `buyers` (
   `id` int(11) UNSIGNED NOT NULL,
   `username` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `profile_pic_url` varchar(500) DEFAULT NULL,
   `fb_id` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `fb_email` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `address` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
-  `phone_number` int(20) DEFAULT NULL,
   `display_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `phone_number` int(20) DEFAULT NULL,
+  `address` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   `liabilities` tinyint(1) NOT NULL DEFAULT '0',
-  `token` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `profile_pic_url` varchar(500) DEFAULT NULL,
   `iat` varchar(100) CHARACTER SET utf8 NOT NULL,
   `active` tinyint(1) UNSIGNED DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -46,8 +44,8 @@ CREATE TABLE `buyers` (
 -- 資料表的匯出資料 `buyers`
 --
 
-INSERT INTO `buyers` (`id`, `username`, `password`, `profile_pic_url`, `fb_id`, `fb_email`, `address`, `phone_number`, `display_name`, `liabilities`, `token`, `iat`, `active`) VALUES
-(1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '', 1);
+INSERT INTO `buyers` (`id`, `username`, `password`, `fb_id`, `display_name`, `phone_number`, `address`, `liabilities`, `profile_pic_url`, `iat`, `active`) VALUES
+(1, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '', 1);
 
 -- --------------------------------------------------------
 
@@ -85,11 +83,11 @@ CREATE TABLE `favorite` (
 
 CREATE TABLE `news` (
   `id` int(11) UNSIGNED NOT NULL,
-  `product_id` int(11) UNSIGNED DEFAULT NULL,
   `seller_id` int(11) UNSIGNED DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
   `title` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `image_url` varchar(500) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -111,34 +109,20 @@ CREATE TABLE `order_forms` (
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `product`
---
-
-CREATE TABLE `product` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
-  `qty` int(11) DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
-  `weight` int(11) DEFAULT NULL,
-  `seller_id` int(11) UNSIGNED DEFAULT NULL,
-  `rating` float DEFAULT NULL,
-  `rating_number` int(11) DEFAULT NULL,
-  `image_url` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- 資料表結構 `products`
 --
 
 CREATE TABLE `products` (
   `id` int(11) UNSIGNED NOT NULL,
   `seller_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `qty` int(11) DEFAULT NULL,
-  `image_url` varchar(500) DEFAULT NULL
+  `price` int(11) DEFAULT NULL,
+  `weight` int(11) DEFAULT NULL,
+  `rating` float DEFAULT NULL,
+  `rating_number` int(11) DEFAULT NULL,
+  `image_url` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -224,12 +208,6 @@ ALTER TABLE `order_forms`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `product`
---
-ALTER TABLE `product`
-  ADD PRIMARY KEY (`id`);
-
---
 -- 資料表索引 `products`
 --
 ALTER TABLE `products`
@@ -283,9 +261,9 @@ ALTER TABLE `news`
 ALTER TABLE `order_forms`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
--- 使用資料表 AUTO_INCREMENT `product`
+-- 使用資料表 AUTO_INCREMENT `products`
 --
-ALTER TABLE `product`
+ALTER TABLE `products`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- 使用資料表 AUTO_INCREMENT `sellers`
