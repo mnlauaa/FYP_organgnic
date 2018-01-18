@@ -1,33 +1,32 @@
 const userModel = require('../models/userModel');
 
 module.exports = {
-    getBuyerById,
-    getSellerById,
-    getSellers,
-    getBuyers
+    getBuyer,
+    getSeller,
+    getSellerList
+    // getBuyers
 }
 
 
-async function getBuyerById(ctx){
+async function getBuyer(ctx){
 	let buyer_id = ctx.params.id;
-	let buyer = await userModel.getById('buyers', buyer_id);
+	let buyer = await userModel.getBuyerById(buyer_id);
     ctx.body = buyer;
 }
 
-async function getSellerById(ctx){
+async function getSeller(ctx){
 	let seller_id = ctx.params.id;
-	let seller = await userModel.getById('sellers', seller_id);
+	let seller = await userModel.getSellerById(seller_id)
     ctx.body = seller;
 }
 
-async function getSellers(ctx){
-	let sellers = await userModel.getAll('sellers');
-	ctx.body = sellers;
+async function getSellerList(ctx){
+	let seller_list = await userModel.getAllSellers();
+	ctx.body = seller_list;
     
 }
 
-async function getBuyers(ctx){
-	let buyers = await userModel.getAll('buyers');
-	ctx.body = buyers;
-    
-}
+// async function getBuyers(ctx){
+// 	let buyers = await userModel.getAll('buyers');
+// 	ctx.body = buyers;
+// }
