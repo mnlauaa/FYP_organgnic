@@ -5,9 +5,8 @@ const db = require('./utils/database')
 
 let test = new Router()
     .get('/', testCtrl.testing)
-    .get('/buyer/:id', userCtrl.getBuyerById)
-    .get('/buyer', userCtrl.getBuyers)
-    .get('/seller/:id', userCtrl.getSellerById)
-    .get('/seller', userCtrl.getSellers);
+    .get('/buyer/:id', userCtrl.getBuyer)
+    .get('/seller/:id', userCtrl.getBuyer)
+    .get('/seller', userCtrl.getSellerList);
 
 module.exports = test
