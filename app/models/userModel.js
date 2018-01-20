@@ -2,24 +2,17 @@ const db = require('../utils/database')
 
 const users = {
 
-	async getBuyerById(id) {
-		let _sql = 'SELECT * FROM buyers WHERE id = ?';
-		let buyer = await db.query(_sql, id);
+	async getUserById(id, identity) {
+		let _sql = 'SELECT * FROM users WHERE id = ?, identity = ?';
+		let buyer = await db.query(_sql, [id, identity]);
 		return buyer
 	},
 
-	async getSellerById(id) {
-		let _sql = 'SELECT * FROM sellers WHERE id = ?';
-		let seller = await db.query(_sql, id);
-		return seller
-	},
-
 	async getAllSellers() {
-		let _sql = 'SELECT * FROM sellers';	
+		let _sql = 'SELECT * FROM users WHERE identity = seller';	
 		let sellers = await db.query(_sql);
 		return sellers
 	},
-
 
 	// async getAll(table) {
 	// let _sql= 'SELECT * FROM ?? ';

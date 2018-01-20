@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.2
--- http://www.phpmyadmin.net
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
 --
--- 主機: localhost
--- 產生時間： 2018 年 01 月 18 日 08:04
--- 伺服器版本: 10.1.19-MariaDB
--- PHP 版本： 5.6.28
+-- Host: 127.0.0.1
+-- Generation Time: Jan 20, 2018 at 04:10 PM
+-- Server version: 10.1.29-MariaDB
+-- PHP Version: 7.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -17,40 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 資料庫： `fyp_organgnic`
+-- Database: `fyp_organgnic`
 --
 
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `buyers`
---
-
-CREATE TABLE `buyers` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `username` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `fb_id` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `display_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `phone_number` int(20) DEFAULT NULL,
-  `address` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
-  `liabilities` tinyint(1) NOT NULL DEFAULT '0',
-  `profile_pic_url` varchar(500) DEFAULT NULL,
-  `iat` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `active` tinyint(1) UNSIGNED DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- 資料表的匯出資料 `buyers`
---
-
-INSERT INTO `buyers` (`id`, `username`, `password`, `fb_id`, `display_name`, `phone_number`, `address`, `liabilities`, `profile_pic_url`, `iat`, `active`) VALUES
-(1, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '', 1);
-
--- --------------------------------------------------------
-
---
--- 資料表結構 `chat_logs`
+-- Table structure for table `chat_logs`
 --
 
 CREATE TABLE `chat_logs` (
@@ -65,7 +40,7 @@ CREATE TABLE `chat_logs` (
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `favorite`
+-- Table structure for table `favorite`
 --
 
 CREATE TABLE `favorite` (
@@ -78,7 +53,7 @@ CREATE TABLE `favorite` (
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `news`
+-- Table structure for table `news`
 --
 
 CREATE TABLE `news` (
@@ -94,7 +69,7 @@ CREATE TABLE `news` (
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `order_forms`
+-- Table structure for table `order_forms`
 --
 
 CREATE TABLE `order_forms` (
@@ -109,7 +84,7 @@ CREATE TABLE `order_forms` (
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `products`
+-- Table structure for table `products`
 --
 
 CREATE TABLE `products` (
@@ -128,26 +103,7 @@ CREATE TABLE `products` (
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `sellers`
---
-
-CREATE TABLE `sellers` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `username` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `profile_picture_url` varchar(500) DEFAULT NULL,
-  `address` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
-  `phone_number` int(20) DEFAULT NULL,
-  `display_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `token` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `iat` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- 資料表結構 `shopping_cart`
+-- Table structure for table `shopping_cart`
 --
 
 CREATE TABLE `shopping_cart` (
@@ -161,7 +117,7 @@ CREATE TABLE `shopping_cart` (
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `transactions`
+-- Table structure for table `transactions`
 --
 
 CREATE TABLE `transactions` (
@@ -173,113 +129,139 @@ CREATE TABLE `transactions` (
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- 已匯出資料表的索引
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `username` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `fb_id` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `display_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `phone_number` int(20) DEFAULT NULL,
+  `address` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  `liabilities` tinyint(1) NOT NULL DEFAULT '0',
+  `profile_pic_url` varchar(500) DEFAULT NULL,
+  `identity` varchar(100) NOT NULL,
+  `iat` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `active` tinyint(1) UNSIGNED DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `fb_id`, `display_name`, `phone_number`, `address`, `liabilities`, `profile_pic_url`, `identity`, `iat`, `active`) VALUES
+(1, 'test', 'test', NULL, NULL, 12345678, 'Not here', 0, NULL, '', '', 1);
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- 資料表索引 `buyers`
---
-ALTER TABLE `buyers`
-  ADD PRIMARY KEY (`id`);
-
---
--- 資料表索引 `chat_logs`
+-- Indexes for table `chat_logs`
 --
 ALTER TABLE `chat_logs`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `favorite`
+-- Indexes for table `favorite`
 --
 ALTER TABLE `favorite`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `news`
+-- Indexes for table `news`
 --
 ALTER TABLE `news`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `order_forms`
+-- Indexes for table `order_forms`
 --
 ALTER TABLE `order_forms`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `products`
+-- Indexes for table `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `sellers`
---
-ALTER TABLE `sellers`
-  ADD PRIMARY KEY (`id`);
-
---
--- 資料表索引 `shopping_cart`
+-- Indexes for table `shopping_cart`
 --
 ALTER TABLE `shopping_cart`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `transactions`
+-- Indexes for table `transactions`
 --
 ALTER TABLE `transactions`
   ADD PRIMARY KEY (`id`);
 
 --
--- 在匯出的資料表使用 AUTO_INCREMENT
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- 使用資料表 AUTO_INCREMENT `buyers`
+-- AUTO_INCREMENT for table `chat_logs`
 --
-ALTER TABLE `buyers`
+ALTER TABLE `chat_logs`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `favorite`
+--
+ALTER TABLE `favorite`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `news`
+--
+ALTER TABLE `news`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `order_forms`
+--
+ALTER TABLE `order_forms`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `shopping_cart`
+--
+ALTER TABLE `shopping_cart`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- 使用資料表 AUTO_INCREMENT `chat_logs`
---
-ALTER TABLE `chat_logs`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- 使用資料表 AUTO_INCREMENT `favorite`
---
-ALTER TABLE `favorite`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- 使用資料表 AUTO_INCREMENT `news`
---
-ALTER TABLE `news`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- 使用資料表 AUTO_INCREMENT `order_forms`
---
-ALTER TABLE `order_forms`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- 使用資料表 AUTO_INCREMENT `products`
---
-ALTER TABLE `products`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- 使用資料表 AUTO_INCREMENT `sellers`
---
-ALTER TABLE `sellers`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- 使用資料表 AUTO_INCREMENT `shopping_cart`
---
-ALTER TABLE `shopping_cart`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
---
--- 使用資料表 AUTO_INCREMENT `transactions`
---
-ALTER TABLE `transactions`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
