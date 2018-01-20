@@ -6,7 +6,7 @@ const authCtrl = require('./controllers/auth');
 const db = require('./utils/database');
 
 let test = new Router()
-    .get('/', testCtrl.testing)
+    .get('/test', passport.authenticate('jwt', { session: false }), testCtrl.testing)
     .post('/login', passport.authenticate('normal-login', {session: false}), authCtrl.postLogin)
     .get('/buyer/:id', userCtrl.getUser)
     .get('/seller/:id', userCtrl.getUser)

@@ -11,6 +11,6 @@ module.exports = {
 
 async function testing(ctx){
     var testing = await testModel.getTest();
-    console.log(testing);
     ctx.body = "testing testing"
+    console.log(ctx.state.user.username)
 }

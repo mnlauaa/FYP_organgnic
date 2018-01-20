@@ -9,7 +9,7 @@ const users = {
 	},
 
 	async getAllSellers() {
-		let _sql = 'SELECT * FROM users WHERE identity = seller';	
+		let _sql = 'SELECT * FROM users WHERE identity = "seller"';	
 		let sellers = await db.query(_sql);
 		return sellers
 	},

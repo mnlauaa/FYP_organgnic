@@ -17,7 +17,7 @@ const product = {
 	},
 
 	async getOrderFormById(id){
-		ley _sql = 'SELECT * FROM order_forms WHERE id = ?';
+		let _sql = 'SELECT * FROM order_forms WHERE id = ?';
 		let order_form = await db.query(_sql, id);
 		return order_form 
 	},
