@@ -8,17 +8,18 @@ const db = require('./utils/database');
 const auth = require('./auth');
 
 const app = new Koa();
+auth.init();
 
 app.use(logger())
-    .use(async (ctx, next)=>{
-        try {
-            auth.init();
-            await next()
-        }catch(err) {
-            ctx.body = err.message
-            ctx.status = err.status || 500
-        }
-    })
+    // .use(async (ctx, next)=>{
+    //     // try {
+    //         auth.init();
+    //         await next()
+    //     // }catch(err) {
+    //     //     ctx.body = err.message
+    //     //     ctx.status = err.status || 500
+    //     // }
+    // })
     .use(bodyParser())
     .use(passport.initialize())
     .use(routers.routes())
