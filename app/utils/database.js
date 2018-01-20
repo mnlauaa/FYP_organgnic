@@ -3,6 +3,7 @@ const config = require('../../config');
 const dbConfig = config.database;
 const db = mysql.createConnection(dbConfig);
 
+
 db.connect();
 
 function query(sql, values){
@@ -16,7 +17,5 @@ function query(sql, values){
         })
     })
 }
-
-
 
 module.exports = {query}
