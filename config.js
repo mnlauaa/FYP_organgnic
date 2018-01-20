@@ -1,5 +1,5 @@
 const config = {
-    port: 3000,
+    PORT: 3000,
     database: {
         database: 'fyp_organgnic',
         user: 'root',

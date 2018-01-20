@@ -1,13 +1,11 @@
 module.exports = {
     postLogin,
     postLogout,
-    postSignUp,
-    putBuyer,
-    putSeller
+    postSignUp
 }
 
 async function postLogin(ctx) {
-
+    ctx.body = "You Login";
 }
 
 async function postLogout(ctx) {
@@ -15,13 +13,5 @@ async function postLogout(ctx) {
 }
 
 async function postSignUp(ctx) {
-
-}
-
-async function putBuyer(ctx) {
-
-}
-
-async function putSeller(ctx) {
 
 }
