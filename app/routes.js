@@ -4,6 +4,7 @@ const testCtrl = require('./controllers/test');
 const userCtrl = require('./controllers/user');
 const authCtrl = require('./controllers/auth');
 const productCrtl = require('./controllers/product');
+const recoedCrtl = require('./controllers/record');
 const db = require('./utils/database');
 
 let test = new Router()
@@ -15,6 +16,9 @@ let test = new Router()
     .get('/product', productCrtl.getProducts)
     .get('/product/:id', productCrtl.getProductById)
     .get('/order_form', productCrtl.getOrderForms)
-    .get('order_form/:id', productCrtl.getOrderFormById);
+    .get('order_form/:id', productCrtl.getOrderFormById)
+    .get('record', recoedCrtl.getChatLogs)
+    .get('record/:id', recoedCrtl.getChatLogsById)
+    .get('record/:sender_id', recoedCrtl.getChatLogsBySender);
 
 module.exports = test
