@@ -3,6 +3,7 @@ const passport = require('koa-passport');
 const testCtrl = require('./controllers/test');
 const userCtrl = require('./controllers/user');
 const authCtrl = require('./controllers/auth');
+const productCrtl = require('./controllers/product');
 const db = require('./utils/database');
 
 let test = new Router()
@@ -10,6 +11,10 @@ let test = new Router()
     .post('/login', passport.authenticate('normal-login', {session: false}), authCtrl.postLogin)
     .get('/buyer/:id', userCtrl.getUser)
     .get('/seller/:id', userCtrl.getUser)
-    .get('/seller', userCtrl.getSellerList);
+    .get('/seller', userCtrl.getSellerList)
+    .get('/product', productCrtl.getProducts)
+    .get('/product/:id', productCrtl.getProductById)
+    .get('/order_form', productCrtl.getOrderForms)
+    .get('order_form/:id', productCrtl.getOrderFormById);
 
 module.exports = test
