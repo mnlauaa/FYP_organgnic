@@ -24,7 +24,7 @@
     "koa-bodyparser": "^4.2.0",
     "koa-logger": "^3.1.0",
     "koa-passport": "^4.0.1",
-    "koa-router": "^7.3.0",
+    "koa-router": "^7.4.0",
     "mysql": "^2.15.0",
     "passport-custom": "^1.0.5",
     "passport-jwt": "^3.0.1",

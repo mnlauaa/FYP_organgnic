@@ -10,6 +10,7 @@ const auth = require('./auth');
 const app = new Koa();
 auth.init();
 
+
 app.use(logger())
     // .use(async (ctx, next)=>{
     //     // try {
@@ -23,7 +24,7 @@ app.use(logger())
     .use(bodyParser())
     .use(passport.initialize())
     .use(routers.routes())
-    //catch err
+/*    catch err
     .use(async (ctx, next)=>{
         try {
             await next()
@@ -31,7 +32,7 @@ app.use(logger())
             ctx.body = err.message
             ctx.status = err.status || 500
         }
-    })
+    })*/
     .listen(config.PORT);
 
 console.log("localhost:" + config.PORT);
