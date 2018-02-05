@@ -1,6 +1,9 @@
+const productModel = require('../models/productModel');
+
 module.exports = {
     getProducts,
     getProductById,
+    getOrderFormById,
     getOrderForms,
     postOrderForms
 }
@@ -28,5 +31,7 @@ async function getOrderForms(ctx){
 }
 
 async function postOrderForms(ctx){
-	
+	let seller_id = ctx.request.body.seller_id;
+	let buyer_id = ctx.request.body.buyer_id;
+	let new_order_form = await productModel.addNewOrderForm(buyer_id, seller_id);
 }

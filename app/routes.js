@@ -16,9 +16,10 @@ let test = new Router()
     .get('/product', productCrtl.getProducts)
     .get('/product/:id', productCrtl.getProductById)
     .get('/order_form', productCrtl.getOrderForms)
-    .get('order_form/:id', productCrtl.getOrderFormById)
-    .get('record', recoedCrtl.getChatLogs)
-    .get('record/:id', recoedCrtl.getChatLogsById)
-    .get('record/:sender_id', recoedCrtl.getChatLogsBySender);
+    .get('/order_form/:id', productCrtl.getOrderFormById)
+    .get('/record', recoedCrtl.getChatLogs)
+    .get('/record/:id', recoedCrtl.getChatLogsById)
+    // .get('record/:sender_id', recoedCrtl.getChatLogsBySender)
+    .post('/order_form/', productCrtl.postOrderForms)
 
 module.exports = test
