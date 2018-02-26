@@ -13,14 +13,14 @@ auth.init();
 
 app.use(logger())
     // .use(async (ctx, next)=>{
-    //     // try {
+    //      try {
     //         auth.init();
     //         await next()
-    //     // }catch(err) {
-    //     //     ctx.body = err.message
-    //     //     ctx.status = err.status || 500
-    //     // }
-    // })
+    //     }catch(err) {
+    //         ctx.body = err.message
+    //         ctx.status = err.status || 500
+    //      }
+    //  })
     .use(bodyParser())
     .use(passport.initialize())
     .use(routers.routes())

@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
--- https://www.phpmyadmin.net/
+-- version 4.5.2
+-- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Jan 20, 2018 at 04:10 PM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.2.0
+-- Host: localhost
+-- Generation Time: Feb 26, 2018 at 11:20 AM
+-- Server version: 10.1.19-MariaDB
+-- PHP Version: 5.6.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -40,12 +38,26 @@ CREATE TABLE `chat_logs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `farms`
+--
+
+CREATE TABLE `farms` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `seller_id` int(11) DEFAULT NULL,
+  `phone_number` int(20) DEFAULT NULL,
+  `address` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  `active` tinyint(1) UNSIGNED DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `favorite`
 --
 
 CREATE TABLE `favorite` (
   `id` int(11) UNSIGNED NOT NULL,
-  `seller_id` int(11) UNSIGNED DEFAULT NULL,
+  `farm_id` int(11) UNSIGNED DEFAULT NULL,
   `buyer_id` int(11) UNSIGNED DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -58,7 +70,7 @@ CREATE TABLE `favorite` (
 
 CREATE TABLE `news` (
   `id` int(11) UNSIGNED NOT NULL,
-  `seller_id` int(11) UNSIGNED DEFAULT NULL,
+  `farm_id` int(11) UNSIGNED DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
   `title` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
@@ -74,7 +86,7 @@ CREATE TABLE `news` (
 
 CREATE TABLE `order_forms` (
   `id` int(11) UNSIGNED NOT NULL,
-  `buyer_id` int(11) UNSIGNED DEFAULT NULL,
+  `farm_id` int(11) UNSIGNED DEFAULT NULL,
   `seller_id` int(11) UNSIGNED DEFAULT NULL,
   `date` date DEFAULT NULL,
   `sataus` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -89,7 +101,7 @@ CREATE TABLE `order_forms` (
 
 CREATE TABLE `products` (
   `id` int(11) UNSIGNED NOT NULL,
-  `seller_id` int(11) UNSIGNED DEFAULT NULL,
+  `farm_id` int(11) UNSIGNED DEFAULT NULL,
   `name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `qty` int(11) DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
@@ -168,6 +180,12 @@ ALTER TABLE `chat_logs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `farms`
+--
+ALTER TABLE `farms`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `favorite`
 --
 ALTER TABLE `favorite`
@@ -218,50 +236,46 @@ ALTER TABLE `users`
 --
 ALTER TABLE `chat_logs`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
+--
+-- AUTO_INCREMENT for table `farms`
+--
+ALTER TABLE `farms`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `favorite`
 --
 ALTER TABLE `favorite`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `order_forms`
 --
 ALTER TABLE `order_forms`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `shopping_cart`
 --
 ALTER TABLE `shopping_cart`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-COMMIT;
-
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
