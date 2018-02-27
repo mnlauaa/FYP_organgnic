@@ -9,19 +9,26 @@ module.exports = {
 }
 
 async function getMe(ctx){
-
+    let id = ctx.state.user.id;
+    let users = await userModel.findUserById(id);
+    ctx.body = users[0];
 }
 
 async function getUser(ctx){
     let id = ctx.params.id;
-    let identity =  ctx.state.user.identity;
-	let users = await userModel.getUserById(id, identity);
+	let users = await userModel.findUserById(id);
     ctx.body = users[0];
 }
 
-async function getSellerList(ctx){
-	let seller_list = await userModel.getAllSellers();
-	ctx.body = seller_list;
+async function getfarm(ctx){
+    let id = ctx.params.id;
+	let farm = await userModel.findUserById(id);
+    ctx.body = farm[0];
+}
+
+async function getFarmList(ctx){
+	let farms = await userModel.findAllFarms();
+	ctx.body = farms;
 }
 
 async function putMe(ctx){
