@@ -6,6 +6,7 @@ module.exports = {
     postLogin,
     postLogout,
     postSignUp,
+    postFarmer,
     postFb
 }
 
@@ -57,6 +58,10 @@ async function postSignUp(ctx) {
     await authModel.userSignUp(newUser);
     let token = jwt.sign(jwt_payload, config.JWT_SECRET_KEY);
     ctx.body = {token: token};
+}
+
+async function postFarmer(ctx) {
+
 }
 
 async function postFb(ctx) {

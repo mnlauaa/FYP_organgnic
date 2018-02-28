@@ -2,8 +2,10 @@ const userModel = require('../models/userModel');
 
 module.exports = {
     getMe,
-    getUser,
-    getSellerList,
+    getUserById,
+    getfarmById,
+    getFarmList,
+    getFarmReview,
     putMe
     // getBuyers
 }
@@ -14,13 +16,13 @@ async function getMe(ctx){
     ctx.body = users[0];
 }
 
-async function getUser(ctx){
+async function getUserById(ctx){
     let id = ctx.params.id;
 	let users = await userModel.findUserById(id);
     ctx.body = users[0];
 }
 
-async function getfarm(ctx){
+async function getfarmById(ctx){
     let id = ctx.params.id;
 	let farm = await userModel.findUserById(id);
     ctx.body = farm[0];
@@ -29,6 +31,10 @@ async function getfarm(ctx){
 async function getFarmList(ctx){
 	let farms = await userModel.findAllFarms();
 	ctx.body = farms;
+}
+
+async function getFarmReview(ctx){
+    
 }
 
 async function putMe(ctx){
