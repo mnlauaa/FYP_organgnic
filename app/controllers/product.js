@@ -23,11 +23,20 @@ async function getProductById(ctx) {
 }
 
 async function getProductReview(ctx) {
-
+	let id = ctx.params.id;
+	let review = await productModel.getAllProductReviewById(id);
+	ctx.body = review;
 }
 
 async function postProduct(ctx) {
-
+	let product_parms = [
+		ctx.request.body.farm_id,
+		ctx.request.body.name,
+		ctx.request.body.qty,
+		ctx.request.body.price,
+		ctx.request.body.weight
+	]
+	let product = await productModel.addNewProduct(product_parms);
 }
 
 async function putProduct(ctx) {
