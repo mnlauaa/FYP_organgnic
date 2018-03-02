@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 26, 2018 at 11:20 AM
+-- Generation Time: Mar 02, 2018 at 06:46 AM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -48,6 +48,14 @@ CREATE TABLE `farms` (
   `address` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   `active` tinyint(1) UNSIGNED DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `farms`
+--
+
+INSERT INTO `farms` (`id`, `seller_id`, `phone_number`, `address`, `active`) VALUES
+(1, 1, NULL, NULL, 1),
+(2, 2, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -115,6 +123,23 @@ CREATE TABLE `products` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Review`
+--
+
+CREATE TABLE `Review` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `farm_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `type` tinyint(1) DEFAULT NULL,
+  `rating` float DEFAULT NULL,
+  `comment` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `active` tinyint(4) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `shopping_cart`
 --
 
@@ -167,7 +192,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `fb_id`, `display_name`, `phone_number`, `address`, `liabilities`, `profile_pic_url`, `identity`, `iat`, `active`) VALUES
-(1, 'test', 'test', NULL, NULL, 12345678, 'Not here', 0, NULL, '', '', 1);
+(1, 'user1', NULL, NULL, 'seller1', NULL, NULL, 0, NULL, 'seller', '', 1),
+(2, 'user2', NULL, NULL, 'seller2', NULL, NULL, 0, NULL, 'seller', '', 1),
+(3, 'user3', NULL, NULL, 'buyer1', NULL, NULL, 0, NULL, 'buyer', '', 1);
 
 --
 -- Indexes for dumped tables
@@ -210,6 +237,12 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `Review`
+--
+ALTER TABLE `Review`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `shopping_cart`
 --
 ALTER TABLE `shopping_cart`
@@ -240,7 +273,7 @@ ALTER TABLE `chat_logs`
 -- AUTO_INCREMENT for table `farms`
 --
 ALTER TABLE `farms`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `favorite`
 --
@@ -262,6 +295,11 @@ ALTER TABLE `order_forms`
 ALTER TABLE `products`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `Review`
+--
+ALTER TABLE `Review`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `shopping_cart`
 --
 ALTER TABLE `shopping_cart`
@@ -275,7 +313,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
