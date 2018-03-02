@@ -14,6 +14,18 @@ const products = {
 		return products 
 	},
 
+	async getAllProductReviewById(id){
+		let _sql = 'SELECT * FROM reviews WHERE product_id = ?';
+		let reviews = await db.query(_sql, id);
+		return reviews;
+	},
+
+	async addNewProduct(product_parms){
+		let _sql = 'INSERT INTO products(farm_id, name, qty, price, weight) VALUES (?)';
+		let new_product = await db.query(_sql, [product_parms]);
+		return new_product;
+	},
+
 	async getOrderFormById(id){
 		let _sql = 'SELECT * FROM order_forms WHERE id = ?';
 		let order_form = await db.query(_sql, id);

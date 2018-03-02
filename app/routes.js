@@ -33,7 +33,7 @@ let users = new Router()
 let products = new Router()
     .get('/', productCrtl.getProductList)
     .get('/:id', productCrtl.getProductById)
-    .get('/:id/rewiews', productCrtl.getProductReview)
+    .get('/:id/reviews', productCrtl.getProductReview)
     .post('/', productCrtl.postProduct)
     .put('/', productCrtl.putProduct)
 

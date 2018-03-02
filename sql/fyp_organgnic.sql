@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 02, 2018 at 06:46 AM
+-- Generation Time: Mar 02, 2018 at 01:01 PM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -109,10 +109,10 @@ CREATE TABLE `order_forms` (
 
 CREATE TABLE `products` (
   `id` int(11) UNSIGNED NOT NULL,
-  `farm_id` int(11) UNSIGNED DEFAULT NULL,
-  `name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
-  `qty` int(11) DEFAULT NULL,
-  `price` int(11) DEFAULT NULL,
+  `farm_id` int(11) UNSIGNED NOT NULL,
+  `name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `qty` int(11) NOT NULL,
+  `price` int(11) NOT NULL,
   `weight` int(11) DEFAULT NULL,
   `rating` float DEFAULT NULL,
   `rating_number` int(11) DEFAULT NULL,
@@ -120,13 +120,26 @@ CREATE TABLE `products` (
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `farm_id`, `name`, `qty`, `price`, `weight`, `rating`, `rating_number`, `image_url`, `active`) VALUES
+(1, 1, 'test product 0', 1, 1, 1, NULL, NULL, NULL, 1),
+(2, 0, '?', 0, 0, NULL, NULL, NULL, NULL, 1),
+(8, 1, 'egg', 0, 0, NULL, NULL, NULL, NULL, 1),
+(9, 1, 'egg', 0, 0, NULL, NULL, NULL, NULL, 1),
+(10, 1, 'egg', 0, 0, NULL, NULL, NULL, NULL, 1),
+(11, 1, 'egg', 0, 0, NULL, NULL, NULL, NULL, 1),
+(12, 1, 'egg', 5, 1, 1, NULL, NULL, NULL, 1);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Review`
+-- Table structure for table `reviews`
 --
 
-CREATE TABLE `Review` (
+CREATE TABLE `reviews` (
   `id` int(11) UNSIGNED NOT NULL,
   `farm_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
@@ -136,6 +149,15 @@ CREATE TABLE `Review` (
   `date` date DEFAULT NULL,
   `active` tinyint(4) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `farm_id`, `product_id`, `type`, `rating`, `comment`, `date`, `active`) VALUES
+(1, 1, NULL, 0, NULL, NULL, '2018-03-02', 1),
+(2, NULL, 1, 1, NULL, NULL, '2018-03-02', 1),
+(3, NULL, 1, 1, NULL, 'new', '2018-03-02', 1);
 
 -- --------------------------------------------------------
 
@@ -237,9 +259,9 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `Review`
+-- Indexes for table `reviews`
 --
-ALTER TABLE `Review`
+ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -293,12 +315,12 @@ ALTER TABLE `order_forms`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
--- AUTO_INCREMENT for table `Review`
+-- AUTO_INCREMENT for table `reviews`
 --
-ALTER TABLE `Review`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `reviews`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `shopping_cart`
 --
