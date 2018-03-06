@@ -10,9 +10,10 @@ const chatCtrl = require('./controllers/chat');
 
 const db = require('./utils/database');
 
+
 /* router 1 (/me) */
 let me = new Router()
-    .get('/', userCtrl.getMe)
+    .get('/', passport.authenticate('jwt', { session: false }), userCtrl.getMe)
     .get('/shopping_cart', orderCrtl.getMyShoppingCart)
     .get('/order', orderCrtl.getMyOrder)
     .get('/chat', chatCtrl.getMyChat)
@@ -53,7 +54,7 @@ let chats = new Router()
     .post('/', chatCtrl.postChat)
 
 let router = new Router()
-router.use('/me', passport.authenticate('jwt', { session: false }), me.routes(), me.allowedMethods())
+router.use('/me', me.routes(), me.allowedMethods())
 router.use('/users', users.routes(), users.allowedMethods())
 router.use('/products', products.routes(), products.allowedMethods())
 router.use('/orders', orders.routes(), orders.allowedMethods())
