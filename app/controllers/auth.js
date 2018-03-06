@@ -38,17 +38,20 @@ async function postSignUp(ctx) {
         return errHandle(ctx, err);
     }
 
-    if(await authModel.checkUsernameExist(ctx.request.body.username)[0] != null){
+    let userNameExist = await authModel.checkUsernameExist(ctx.request.body.username);
+
+    if(userNameExist[0] != null){
         let err = new Error('username has already been taken'); 
         err.status = 406;
         return errHandle(ctx, err);
     }
-    if(await authModel.checkUserDisplayNameExist(ctx.request.body.dispaly_name)[0] != null){
+
+    let displayNameExist = await authModel.checkUserDisplayNameExist(ctx.request.body.dispaly_name)
+    if(displayNameExist[0] != null){
         let err = new Error('display name has already been taken'); 
         err.status = 403;
         return errHandle(ctx, err);
     }
-    console.log('not here')
 
     let iat = Math.floor(Date.now() / 1000) - 30;
     let newUser = [
@@ -57,10 +60,10 @@ async function postSignUp(ctx) {
         ctx.request.body.dispaly_name,
         ctx.request.body.phone_number,
         ctx.request.body.address,
-        ctx.request.body.identity,
+        config.USER_IDENTITY.BUYER,
         iat
     ]
-    let result = await authModel.userSignUp(newUser);
+    let result = await authModel.userSignUp(newUser)
     let jwt_payload = {
         id: result.insertId, 
         iat: iat, 
