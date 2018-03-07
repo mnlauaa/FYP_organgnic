@@ -40,6 +40,23 @@ async function postProduct(ctx) {
 }
 
 async function putProduct(ctx) {
+	let id = ctx.request.body.id;
+	let target = await productModel.getProductById(id);
+	if(!target){
+		console.log("target not exisit!");
+		return;
+	}
+	let update_parms = [ctx.request.body.farm_id,
+		ctx.request.body.name,
+		ctx.request.body.qty,
+		ctx.request.body.price,
+		ctx.request.body.weight,
+		ctx.request.body.rating,
+		ctx.request.body.rating_number,
+		ctx.request.body.image_url
+	]
+	let update_product = await productModel.updateProduct(id, update_parms);
+	ctx.body = "Successfully update!";
 	
 }
 

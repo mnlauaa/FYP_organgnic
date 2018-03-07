@@ -25,14 +25,14 @@ app.use(logger())
     .use(passport.initialize())
     .use(routers.routes())
 //   catch err
-    .use(async (ctx, next)=>{
-        try {
-            await next()
-        }catch(err) {
-            ctx.body = err.message
-            ctx.status = err.status || 500
-        }
-    })
+    // .use(async (ctx, next)=>{
+    //     try {
+    //         await next()
+    //     }catch(err) {
+    //         ctx.body = err.message
+    //         ctx.status = err.status || 500
+    //     }
+    // })
     .listen(config.PORT);
 
 console.log("localhost:" + config.PORT);
