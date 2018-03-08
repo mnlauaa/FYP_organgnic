@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const config = require('../../config');
 const dbConfig = config.database;
+const errHandle = require('.//errHandle');
 const db = mysql.createConnection(dbConfig);
 
 

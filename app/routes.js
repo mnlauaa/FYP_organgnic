@@ -10,17 +10,18 @@ const chatCtrl = require('./controllers/chat');
 
 const db = require('./utils/database');
 
+
 /* router 1 (/me) */
 let me = new Router()
-    .get('/', userCtrl.getMe)
-    .get('/shopping_cart', orderCrtl.getMyShoppingCart)
+    .get('/', passport.authenticate('jwt', { session: false }), userCtrl.getMe)
+    .get('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.getMyShoppingCart)
     .get('/order', orderCrtl.getMyOrder)
     .get('/chat', chatCtrl.getMyChat)
     .post('/', authCtrl.postSignUp)
-    .post('/login', authCtrl.postLogin)
+    .post('/login', passport.authenticate('normal-login', { session: false }), authCtrl.postLogin)
     .post('/logout', authCtrl.postLogout)
     .post('/fb', authCtrl.postFb)
-    .post('/shopping_cart', orderCrtl.getMyShoppingCart)
+    .post('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.postMyShoppingCart)
     .put('/', userCtrl.putMe)
 
 /* router 2 (/user) */
@@ -53,7 +54,7 @@ let chats = new Router()
     .post('/', chatCtrl.postChat)
 
 let router = new Router()
-router.use('/me', passport.authenticate('jwt', { session: false }), me.routes(), me.allowedMethods())
+router.use('/me', me.routes(), me.allowedMethods())
 router.use('/users', users.routes(), users.allowedMethods())
 router.use('/products', products.routes(), products.allowedMethods())
 router.use('/orders', orders.routes(), orders.allowedMethods())

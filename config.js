@@ -6,7 +6,15 @@ const config = {
         user: 'root',
         password: 'root1234',
         host: 'localhost'
+    },
+    USER_IDENTITY: {
+        BUYER: 0,
+        SELLER: 1
+    },
+    ORDER_STATUS: {
+        SHOPPING_CART: 0
     }
+
 }
 
 module.exports = config

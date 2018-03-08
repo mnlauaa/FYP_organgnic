@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
-const authModel = require('../models/authModel')
+const authModel = require('../models/authModel');
+const errHandle = require('../utils/errHandle');
 
 module.exports = {
     postLogin,
@@ -31,21 +32,27 @@ async function postLogout(ctx) {
 }
 
 async function postSignUp(ctx) {
-    if(await authModel.checkUserVariableExist('username',ctx.request.body.username)[0] != null){
-        let err = new Error('username has already been taken'); 
-        err.status = 406;
-        throw err;
-    }
-    if(await authModel.checkUserVariableExist('dispaly_name',ctx.request.body.dispaly_name)[0] != null){
-        let err = new Error('display name has already been taken'); 
-        err.status = 403;
-        throw err;
-    }
     if(!ctx.request.body.username || !ctx.request.body.password){
         let err = new Error('missing information');
         err.status = 400; 
-        throw err;
+        return errHandle(ctx, err);
     }
+
+    let userNameExist = await authModel.checkUsernameExist(ctx.request.body.username);
+
+    if(userNameExist[0] != null){
+        let err = new Error('username has already been taken'); 
+        err.status = 406;
+        return errHandle(ctx, err);
+    }
+
+    let displayNameExist = await authModel.checkUserDisplayNameExist(ctx.request.body.dispaly_name)
+    if(displayNameExist[0] != null){
+        let err = new Error('display name has already been taken'); 
+        err.status = 403;
+        return errHandle(ctx, err);
+    }
+
     let iat = Math.floor(Date.now() / 1000) - 30;
     let newUser = [
         ctx.request.body.username,
@@ -53,9 +60,16 @@ async function postSignUp(ctx) {
         ctx.request.body.dispaly_name,
         ctx.request.body.phone_number,
         ctx.request.body.address,
+        config.USER_IDENTITY.BUYER,
         iat
     ]
-    await authModel.userSignUp(newUser);
+    let result = await authModel.userSignUp(newUser)
+    let jwt_payload = {
+        id: result.insertId, 
+        iat: iat, 
+        identity: config.USER_IDENTITY.BUYER
+    }
+    
     let token = jwt.sign(jwt_payload, config.JWT_SECRET_KEY);
     ctx.body = {token: token};
 }
