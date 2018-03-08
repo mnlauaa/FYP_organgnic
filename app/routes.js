@@ -14,14 +14,14 @@ const db = require('./utils/database');
 /* router 1 (/me) */
 let me = new Router()
     .get('/', passport.authenticate('jwt', { session: false }), userCtrl.getMe)
-    .get('/shopping_cart', orderCrtl.getMyShoppingCart)
+    .get('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.getMyShoppingCart)
     .get('/order', orderCrtl.getMyOrder)
     .get('/chat', chatCtrl.getMyChat)
     .post('/', authCtrl.postSignUp)
-    .post('/login', authCtrl.postLogin)
+    .post('/login', passport.authenticate('normal-login', { session: false }), authCtrl.postLogin)
     .post('/logout', authCtrl.postLogout)
     .post('/fb', authCtrl.postFb)
-    .post('/shopping_cart', orderCrtl.getMyShoppingCart)
+    .post('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.postMyShoppingCart)
     .put('/', userCtrl.putMe)
 
 /* router 2 (/user) */

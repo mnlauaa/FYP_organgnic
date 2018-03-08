@@ -67,7 +67,7 @@ async function postSignUp(ctx) {
     let jwt_payload = {
         id: result.insertId, 
         iat: iat, 
-        identity: ctx.request.body.identity
+        identity: config.USER_IDENTITY.BUYER
     }
     
     let token = jwt.sign(jwt_payload, config.JWT_SECRET_KEY);

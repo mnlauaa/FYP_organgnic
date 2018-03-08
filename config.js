@@ -10,6 +10,9 @@ const config = {
     USER_IDENTITY: {
         BUYER: 0,
         SELLER: 1
+    },
+    ORDER_STATUS: {
+        SHOPPING_CART: 0
     }
 
 }
