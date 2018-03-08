@@ -25,7 +25,14 @@ const products = {
 		let new_product = await db.query(_sql, [product_parms]);
 		return new_product;
 	},
+	async updateProduct(id, update_parms){
+		let _sql = `UPDATE products 
+						SET farm_id=?, name=?, qty=?, price=?, weight=?, rating=?, rating_number=?, image_url=? 
+						WHERE id = ?`;
 
+		let update_product =await db.query(_sql, [update_parms, id]);
+		return update_product;
+	},
 	async getOrderFormById(id){
 		let _sql = 'SELECT * FROM order_forms WHERE id = ?';
 		let order_form = await db.query(_sql, id);
