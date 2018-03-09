@@ -44,15 +44,19 @@ async function postMyShoppingCart(ctx) {
 }
 
 async function getOederById(ctx) {
-	
+	let id = ctx.params.id;
+	order = await orderModel.findFullOrderById(id);
+	ctx.body = order[0];
 }
 
 async function getMyOrder(ctx) {
-	
+	let id = ctx.state.user.id;
+	order = await orderModel.findMyFullOrder(id);
+	ctx.body = order;
 }
 
 async function postOrder(ctx) {
-	
+
 }
 
 async function putOrder(ctx) {
