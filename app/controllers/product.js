@@ -12,7 +12,8 @@ module.exports = {
 }
 
 async function getProductList(ctx) {
-	let product_list = await productModel.getAllProducts();
+	let filter = ctx.query;
+	let product_list = await productModel.getAllProducts(filter);
 	ctx.body = product_list;
 }
 
@@ -46,16 +47,16 @@ async function putProduct(ctx) {
 		console.log("target not exisit!");
 		return;
 	}
-	let update_parms = [ctx.request.body.farm_id,
-		ctx.request.body.name,
-		ctx.request.body.qty,
-		ctx.request.body.price,
-		ctx.request.body.weight,
-		ctx.request.body.rating,
-		ctx.request.body.rating_number,
-		ctx.request.body.image_url
-	]
-	let update_product = await productModel.updateProduct(id, update_parms);
+	let farm_id =ctx.request.body.farm_id;
+	let name = ctx.request.body.name;
+	let qty = ctx.request.body.qty;
+	let	price = ctx.request.body.price;
+	let	weight = ctx.request.body.weight;
+	let	rating = ctx.request.body.rating;
+	let	rating_number = ctx.request.body.rating_number;
+	let	image_url = ctx.request.body.image_url;
+
+	let update_product = await productModel.updateProduct(id, farm_id, name, qty, price, weight, rating, rating_number, image_url);
 	ctx.body = "Successfully update!";
 	
 }
