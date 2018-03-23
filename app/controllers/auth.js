@@ -21,7 +21,8 @@ async function postLogin(ctx) {
     }
     let token = jwt.sign(jwt_payload, config.JWT_SECRET_KEY);
     await authModel.updateUserToken(iat, user_id);
-    ctx.body = {token: token};
+    ctx.body = {token: token,
+                identity: ctx.state.user.identity};
 }
 
 async function postLogout(ctx) {

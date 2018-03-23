@@ -28,6 +28,10 @@ function init(){
     passport.use('normal-login', new CustomStrategy(async (ctx, done)=>{
         let username = ctx.body.username;
         let password = ctx.body.password;
+        console.log(ctx.body);
+        if(!username || !password){
+            return done(null, false)
+        }
         let user = await db.query('SELECT * FROM users WHERE username = ?', username).catch((err)=>{
             return done(err);
         })
