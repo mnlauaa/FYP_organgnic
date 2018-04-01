@@ -8,8 +8,13 @@ const products = {
 		return product
 	},
 
-	async getAllProducts(){
-		let _sql = 'SELECT * FROM products';
+	async getAllProducts(filter){
+		let _sql = 'SELECT * FROM products WHERE active=1';
+		if(filter.pricebelow)
+			_sql += (' and price<='+filter.pricebelow);
+		if(filter.farm_id)
+			_sql += (' and farm_id ='+filter.farm_id);
+		console.log(_sql);	
 		let products = await db.query(_sql);
 		return products 
 	},
@@ -25,12 +30,12 @@ const products = {
 		let new_product = await db.query(_sql, [product_parms]);
 		return new_product;
 	},
-	async updateProduct(id, update_parms){
+	async updateProduct(id, farm_id, name, qty, price, weight, rating, rating_number, image_url){
 		let _sql = `UPDATE products 
 						SET farm_id=?, name=?, qty=?, price=?, weight=?, rating=?, rating_number=?, image_url=? 
 						WHERE id = ?`;
 
-		let update_product =await db.query(_sql, [update_parms, id]);
+		let update_product =await db.query(_sql, [farm_id, name, qty, price, weight, rating, rating_number, image_url, id]);
 		return update_product;
 	},
 	async getOrderFormById(id){
