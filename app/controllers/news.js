@@ -1,5 +1,4 @@
 const newsModel = require('../models/newsModel');
-
 module.exports = {
     getNewsById,
     getNewsList,
