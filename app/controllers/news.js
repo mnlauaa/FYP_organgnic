@@ -19,8 +19,14 @@ async function getNewsList(ctx) {
 }
 
 async function postNews(ctx) {
-    let datetime = new datetime();
-    let input = [ctx.params.id, ctx.params.farm_id, datetime, ctx.params.title, ctx.params.description, ctx.params.image_url];
+    let datetime = new Date();
+    let input = [
+        ctx.request.body.farm_id, 
+        datetime, 
+        ctx.request.body.title, 
+        ctx.request.body.description, 
+        ctx.request.body.image_url
+    ];
     let news = await newsModel.postNews(input);
 }
 

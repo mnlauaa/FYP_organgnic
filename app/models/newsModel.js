@@ -14,7 +14,15 @@ const news = {
     },
 
     async postNews(input) {
-        let _sql = 'INSERT INTO news (id, farm_id, datetime, title, description, image_url) VALUES (?)';	
+        let _sql = 'INSERT INTO news (farm_id, datetime, title, description, image_url) VALUES (?)';	
+		let news = await db.query(_sql, [input]);
+		return news;
+    },
+
+    async putNews(input) {
+        let _sql = `UPDATE news 
+                    SET farm_id = 'Alfred Schmidt', title = '', description = '', image_url = ''
+                    WHERE id = ?;`;	
 		let news = await db.query(_sql, [input]);
 		return news;
     },
