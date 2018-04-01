@@ -8,7 +8,11 @@ const news = {
     },
     
     async findAllNews() {
-		let _sql = 'SELECT * FROM news';	
+		let _sql = `SELECT n.*, u.display_name
+                FROM news n
+                INNER JOIN farms f ON n.farm_id = f.id
+                INNER JOIN users u ON f.seller_id = u.id
+                WHERE n.active = 1`;	
 		let news = await db.query(_sql);
 		return news;
     },
