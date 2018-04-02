@@ -8,14 +8,14 @@ const products = {
 		return product
 	},
 
-	async getAllProducts(filter){
-		let _sql = 'SELECT * FROM products WHERE active=1';
-		if(filter.pricebelow)
-			_sql += (' and price<='+filter.pricebelow);
-		if(filter.farm_id)
-			_sql += (' and farm_id ='+filter.farm_id);
-		console.log(_sql);	
-		let products = await db.query(_sql);
+	async getAllProducts(sorting_sql, keyword){
+		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.qty, p.price, p.weight, (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
+					FROM products p 
+					INNER JOIN farms f ON f.id = p.farm_id
+					INNER JOIN users u ON f.seller_id = u.id
+					WHERE p.active = 1 AND (p.name LIKE ? OR u.display_name LIKE ?)`;
+		_sql = _sql + sorting_sql
+		let products = await db.query(_sql, [keyword, keyword]);
 		return products 
 	},
 
@@ -30,6 +30,7 @@ const products = {
 		let new_product = await db.query(_sql, [product_parms]);
 		return new_product;
 	},
+
 	async updateProduct(id, farm_id, name, qty, price, weight, rating, rating_number, image_url){
 		let _sql = `UPDATE products 
 						SET farm_id=?, name=?, qty=?, price=?, weight=?, rating=?, rating_number=?, image_url=? 
@@ -38,6 +39,7 @@ const products = {
 		let update_product =await db.query(_sql, [farm_id, name, qty, price, weight, rating, rating_number, image_url, id]);
 		return update_product;
 	},
+
 	async getOrderFormById(id){
 		let _sql = 'SELECT * FROM order_forms WHERE id = ?';
 		let order_form = await db.query(_sql, id);

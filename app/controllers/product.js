@@ -12,8 +12,38 @@ module.exports = {
 }
 
 async function getProductList(ctx) {
-	let filter = ctx.query;
-	let product_list = await productModel.getAllProducts(filter);
+	let sorting = Number(ctx.query.sorting) || null;
+	let keyword = ctx.query.keyword || null;
+	let sorting_sql;
+	console.log(ctx.query);
+
+	switch(sorting){
+		case 1:
+			sorting_sql = " ORDER BY p.name DESC"
+			break;
+		case 2:
+			sorting_sql = " ORDER BY (p.price/p.weight) ASC"
+			break;
+		case 3:
+			sorting_sql = " ORDER BY (p.price/p.weight) DESC"
+			break;
+		case 4:
+			sorting_sql = " ORDER BY (p.rating/p.rating_number) DESC"
+			break;
+		case 5:
+			sorting_sql = " ORDER BY p.last_update DESC"
+			break;
+		default:
+			sorting_sql = " ORDER BY p.name ASC"
+			break;
+	}
+
+	if(keyword)
+		keyword = '%' + keyword + '%'
+	else
+		keyword = '%%'
+	console.log(keyword)
+	let product_list = await productModel.getAllProducts(sorting_sql, keyword);
 	ctx.body = product_list;
 }
 
