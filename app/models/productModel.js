@@ -19,6 +19,16 @@ const products = {
 		return products 
 	},
 
+	async getSearchResult(keyword){
+		let _sql = `SELECT COUNT(p.id) AS num
+					FROM products p 
+					INNER JOIN farms f ON f.id = p.farm_id
+					INNER JOIN users u ON f.seller_id = u.id
+					WHERE p.active = 1 AND (p.name LIKE ? OR u.display_name LIKE ?)`;
+		let num = await db.query(_sql, [keyword, keyword]);
+		return num 
+	},
+
 	async getAllProductReviewById(id){
 		let _sql = 'SELECT * FROM reviews WHERE product_id = ?';
 		let reviews = await db.query(_sql, id);
