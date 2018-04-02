@@ -44,7 +44,8 @@ async function getProductList(ctx) {
 		keyword = '%%'
 	console.log(keyword)
 	let product_list = await productModel.getAllProducts(sorting_sql, keyword);
-	ctx.body = product_list;
+	let result_num = await productModel.getSearchResult(keyword)
+	ctx.body = {product_list: product_list, result_num: result_num[0].num};
 }
 
 async function getProductById(ctx) {
