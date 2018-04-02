@@ -2,6 +2,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const passport = require('koa-passport')
 const logger = require('koa-logger');
+const cors = require('koa2-cors');
 const routers = require('./routes');
 const config = require('../config');
 const db = require('./utils/database');
@@ -12,6 +13,7 @@ auth.init();
 
 
 app.use(logger())
+    .use(cors())
     // .use(async (ctx, next)=>{
     //      try {
     //         auth.init();
