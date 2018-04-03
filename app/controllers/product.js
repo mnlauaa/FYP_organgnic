@@ -14,27 +14,32 @@ module.exports = {
 async function getProductList(ctx) {
 	let sorting = Number(ctx.query.sorting) || null;
 	let keyword = ctx.query.keyword || null;
-	let sorting_sql;
+	let brand = ctx.query.brand || null;
+	let price_below = ctx.query.price_below || null;
+	let price_above = ctx.query.price_above || null;
+
+	let order_sql;
+	let filter_sql = '';
 	console.log(ctx.query);
 
 	switch(sorting){
 		case 1:
-			sorting_sql = " ORDER BY p.name DESC"
+			order_sql = " ORDER BY p.name DESC"
 			break;
 		case 2:
-			sorting_sql = " ORDER BY (p.price/p.weight) ASC"
+			order_sql = " ORDER BY (p.price/p.weight) ASC"
 			break;
 		case 3:
-			sorting_sql = " ORDER BY (p.price/p.weight) DESC"
+			order_sql = " ORDER BY (p.price/p.weight) DESC"
 			break;
 		case 4:
-			sorting_sql = " ORDER BY (p.rating/p.rating_number) DESC"
+			order_sql = " ORDER BY (p.rating/p.rating_number) DESC"
 			break;
 		case 5:
-			sorting_sql = " ORDER BY p.last_update DESC"
+			order_sql = " ORDER BY p.last_update DESC"
 			break;
 		default:
-			sorting_sql = " ORDER BY p.name ASC"
+			order_sql = " ORDER BY p.name ASC"
 			break;
 	}
 
@@ -42,9 +47,25 @@ async function getProductList(ctx) {
 		keyword = '%' + keyword + '%'
 	else
 		keyword = '%%'
-	console.log(keyword)
-	let product_list = await productModel.getAllProducts(sorting_sql, keyword);
-	let result_num = await productModel.getSearchResult(keyword)
+
+	if(brand){
+		filter_sql = filter_sql + ' AND (p.farm_id = ' + brand[0];
+		for(var i = 1; i < brand.length; i++)
+			filter_sql = filter_sql + " OR p.farm_id = " + brand[i];
+		filter_sql = filter_sql + ')'
+	}
+	
+
+	if(price_below)
+		filter_sql = filter_sql + " AND p.price < " + price_below;
+	
+	if(price_above)
+		filter_sql = filter_sql + " AND p.price >" + price_above
+
+	
+	console.log(filter_sql)
+	let product_list = await productModel.getAllProducts(order_sql, filter_sql, keyword);
+	let result_num = await productModel.getSearchResult(filter_sql, keyword)
 	ctx.body = {product_list: product_list, result_num: result_num[0].num};
 }
 

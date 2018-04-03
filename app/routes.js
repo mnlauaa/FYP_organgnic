@@ -17,6 +17,7 @@ let me = new Router()
     .get('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.getMyShoppingCart)
     .get('/order', orderCrtl.getMyOrder)
     .get('/chat', chatCtrl.getMyChat)
+    .get('/favourite', passport.authenticate('jwt', { session: false }), userCtrl.getFavoriteFarm)
     .post('/', authCtrl.postSignUp)
     .post('/login', passport.authenticate('normal-login', { session: false }), authCtrl.postLogin)
     .post('/logout', authCtrl.postLogout)
@@ -26,10 +27,11 @@ let me = new Router()
 
 /* router 2 (/user) */
 let users = new Router()
+    .get('/farms', userCtrl.getFarmList)
     .get('/:id', userCtrl.getUserById)
     .get('/:id/farms', userCtrl.getfarmById)
     .get('/:id/farms/reviews', userCtrl.getFarmReview)
-    .get('/farms', userCtrl.getFarmList)
+    
 
 let products = new Router()
     .get('/', productCrtl.getProductList)
