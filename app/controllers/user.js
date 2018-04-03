@@ -3,6 +3,7 @@ const userModel = require('../models/userModel');
 module.exports = {
     getMe,
     getUserById,
+    getFavoriteFarm,
     getfarmById,
     getFarmList,
     getFarmReview,
@@ -22,6 +23,12 @@ async function getUserById(ctx){
     ctx.body = users[0];
 }
 
+async function getFavoriteFarm(ctx){
+    let id = ctx.state.user.id;
+    let farms = await userModel.findFavoriteFarms(id);
+    ctx.body = farms
+}
+
 async function getfarmById(ctx){
     let id = ctx.params.id;
 	let farm = await userModel.findUserById(id);
@@ -29,7 +36,7 @@ async function getfarmById(ctx){
 }
 
 async function getFarmList(ctx){
-	let farms = await userModel.findAllFarms();
+    let farms = await userModel.findAllFarms();
 	ctx.body = farms;
 }
 

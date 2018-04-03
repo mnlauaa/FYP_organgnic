@@ -8,23 +8,25 @@ const products = {
 		return product
 	},
 
-	async getAllProducts(sorting_sql, keyword){
+	async getAllProducts(order_sql, filter_sql, keyword){
 		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.qty, p.price, p.weight, (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
 					FROM products p 
 					INNER JOIN farms f ON f.id = p.farm_id
 					INNER JOIN users u ON f.seller_id = u.id
 					WHERE p.active = 1 AND (p.name LIKE ? OR u.display_name LIKE ?)`;
-		_sql = _sql + sorting_sql
+		_sql = _sql + filter_sql;
+		_sql = _sql + order_sql;
 		let products = await db.query(_sql, [keyword, keyword]);
 		return products 
 	},
 
-	async getSearchResult(keyword){
+	async getSearchResult(filter_sql, keyword){
 		let _sql = `SELECT COUNT(p.id) AS num
 					FROM products p 
 					INNER JOIN farms f ON f.id = p.farm_id
 					INNER JOIN users u ON f.seller_id = u.id
 					WHERE p.active = 1 AND (p.name LIKE ? OR u.display_name LIKE ?)`;
+		_sql = _sql + filter_sql;
 		let num = await db.query(_sql, [keyword, keyword]);
 		return num 
 	},
