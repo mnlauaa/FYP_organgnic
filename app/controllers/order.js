@@ -12,8 +12,22 @@ module.exports = {
 
 async function getMyShoppingCart(ctx) {
 	let id = ctx.state.user.id;
-	let shopping_cart = await orderModel.findMyShoppingCart(id);
-	ctx.body = shopping_cart;
+	let shopping_cart = await orderModel.findMyShoppingCart(id);	
+	let temp_arry = [];
+	if(shopping_cart[0]){
+		temp_arry[0] = [];
+		let x = shopping_cart[0].farm_id;
+		let y = 0;	
+		shopping_cart.map((item)=>{
+			if(item.farm_id != x){
+				y++;
+				x = item.farm_id;
+				temp_arry[y]=[];
+			}
+			temp_arry[y].push(item)
+		});
+	}	
+	ctx.body = temp_arry;
 }
 
 async function postMyShoppingCart(ctx) {
@@ -21,7 +35,6 @@ async function postMyShoppingCart(ctx) {
 		farm_id = ctx.request.body.farm_id;
 
 	let shoppping_cart = await orderModel.findShoppingCartExist(user_id, farm_id);
-
 	if(!shoppping_cart[0]){
 		let today = new Date();
 		let input = [
@@ -40,7 +53,7 @@ async function postMyShoppingCart(ctx) {
 		ctx.request.body.qty
 	]
 	await orderModel.CreateTeansactions(input);
-	ctx.body = "success";
+	ctx.body = {success: "success"};
 }
 
 async function getOederById(ctx) {

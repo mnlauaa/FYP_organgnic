@@ -3,10 +3,14 @@ const config = require('../../config')
 
 const order = {
 	async findMyShoppingCart(id) {
-		let _sql = `SELECT * FROM order_forms o 
+		let _sql = `SELECT o.farm_id, u.display_name, o.date, t.id AS transaction_id, t.product_id, t.qty,
+						   p.name, p.qty AS products_left, p.price, p.weight, p.image_url FROM order_forms o 
 					INNER JOIN transactions t ON o.id = t.order_id
 					INNER JOIN products p ON t.product_id = p.id
-					WHERE o.buyer_id = ? AND status = ?`;
+					INNER JOIN farms f ON o.farm_id = f.id
+					INNER JOIN users u ON u.id = f.seller_id
+					WHERE o.buyer_id = ? AND o.status = ?
+					ORDER BY o.farm_id ASC`;
 		let result = await db.query(_sql, [id, config.ORDER_STATUS.SHOPPING_CART]);
 		return result;
 	}, 
