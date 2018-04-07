@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 03, 2018 at 06:12 AM
+-- Generation Time: Apr 07, 2018 at 06:44 AM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.2.0
 
@@ -54,7 +54,8 @@ CREATE TABLE `farms` (
 --
 
 INSERT INTO `farms` (`id`, `seller_id`, `active`) VALUES
-(1, 2, 1);
+(1, 2, 1),
+(2, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -68,6 +69,13 @@ CREATE TABLE `favorite` (
   `buyer_id` int(11) UNSIGNED DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `favorite`
+--
+
+INSERT INTO `favorite` (`id`, `farm_id`, `buyer_id`, `active`) VALUES
+(1, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -101,11 +109,19 @@ INSERT INTO `news` (`id`, `farm_id`, `datetime`, `title`, `description`, `image_
 CREATE TABLE `order_forms` (
   `id` int(11) UNSIGNED NOT NULL,
   `farm_id` int(11) UNSIGNED DEFAULT NULL,
-  `seller_id` int(11) UNSIGNED DEFAULT NULL,
+  `buyer_id` int(11) UNSIGNED DEFAULT NULL,
   `date` date DEFAULT NULL,
   `status` int(1) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `order_forms`
+--
+
+INSERT INTO `order_forms` (`id`, `farm_id`, `buyer_id`, `date`, `status`, `active`) VALUES
+(1, 1, 1, '2018-04-04', 0, 1),
+(2, 2, 1, '2018-04-04', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -133,7 +149,8 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `farm_id`, `name`, `qty`, `price`, `weight`, `rating`, `rating_number`, `last_update`, `image_url`, `active`) VALUES
 (1, 1, 'Potato', 10, 45, 600, 14.4, 3, '2018-04-01', 'https://cdn1.medicalnewstoday.com/content/images/articles/280/280579/potatoes-can-be-healthful.jpg', 1),
-(2, 1, 'Sweet Potato', 3, 50, 300, 27, 6, '2018-04-02', 'https://www.burpee.com/dw/image/v2/ABAQ_PRD/on/demandware.static/-/Sites-masterCatalog_Burpee/default/dw367e7208/Images/Product%20Images/prod001584/prod001584.jpg?sw=322&sh=380&sm=fit', 1);
+(2, 1, 'Sweet Potato', 3, 50, 300, 27, 6, '2018-04-02', 'https://www.burpee.com/dw/image/v2/ABAQ_PRD/on/demandware.static/-/Sites-masterCatalog_Burpee/default/dw367e7208/Images/Product%20Images/prod001584/prod001584.jpg?sw=322&sh=380&sm=fit', 1),
+(3, 2, 'Purple Potato', 5, 46, 400, 36, 8, '2018-04-04', 'http://www.pvmi.org/varieties/images/Purple%20Pelisse_c.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -155,20 +172,6 @@ CREATE TABLE `reviews` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `shopping_cart`
---
-
-CREATE TABLE `shopping_cart` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `product_id` int(11) UNSIGNED DEFAULT NULL,
-  `buyer_id` int(11) UNSIGNED DEFAULT NULL,
-  `qty` int(11) UNSIGNED DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `transactions`
 --
 
@@ -180,6 +183,16 @@ CREATE TABLE `transactions` (
   `rating` float DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `order_id`, `product_id`, `qty`, `rating`, `active`) VALUES
+(1, 1, 1, 1, NULL, 1),
+(2, 1, 2, 2, NULL, 1),
+(3, 2, 3, 1, NULL, 1),
+(4, 2, 3, 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -207,8 +220,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `fb_id`, `display_name`, `phone_number`, `address`, `liabilities`, `profile_pic_url`, `identity`, `iat`, `active`) VALUES
-(1, 'test', 'test', NULL, 'testing', 27893025, 'no here', 0, 'https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg', 0, '1522689694', 1),
-(2, 'seller', 'seller', NULL, 'seller', 99999999, 'not here', 0, NULL, 1, '1522666162', 1);
+(1, 'test', 'test', NULL, 'testing', 27893025, 'no here', 0, 'https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg', 0, '1523074981', 1),
+(2, 'seller', 'seller', NULL, 'seller', 99999999, 'not here', 0, NULL, 1, '1523074998', 1),
+(3, 'seller2', 'seller2', NULL, 'HEALITHY FARM', 55555555, 'Hong Kong', 0, NULL, 1, '', 1);
 
 --
 -- Indexes for dumped tables
@@ -257,12 +271,6 @@ ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `shopping_cart`
---
-ALTER TABLE `shopping_cart`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `transactions`
 --
 ALTER TABLE `transactions`
@@ -288,13 +296,13 @@ ALTER TABLE `chat_logs`
 -- AUTO_INCREMENT for table `farms`
 --
 ALTER TABLE `farms`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `favorite`
 --
 ALTER TABLE `favorite`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `news`
@@ -306,13 +314,13 @@ ALTER TABLE `news`
 -- AUTO_INCREMENT for table `order_forms`
 --
 ALTER TABLE `order_forms`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -321,22 +329,16 @@ ALTER TABLE `reviews`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `shopping_cart`
---
-ALTER TABLE `shopping_cart`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
