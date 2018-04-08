@@ -15,7 +15,7 @@ const config = {
         SHOPPING_CART: 0
     },
     SERVER: {
-        IP: 'vml1wk037.cse.ust.hk:3000/'
+        IP: 'http://vml1wk037.cse.ust.hk:3000/'
         // IP: 'http://localhost:3000/'
     }
 
