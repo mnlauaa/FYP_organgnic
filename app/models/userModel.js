@@ -19,7 +19,7 @@ const users = {
 	},
 
 	async findFarmById(id) {
-		let _sql = `SELECT u.id, u.display_name, u.phone_number, u.address, u.profile_pic_url, f.id AS farm_id, f.banner_pic_url FROM users u
+		let _sql = `SELECT u.id, u.display_name, u.phone_number, u.address, u.profile_pic_url, u.identity, f.id AS farm_id, f.about_intro, f.banner_pic_url FROM users u
 					INNER JOIN farms f ON u.id = f.seller_id
 					WHERE u.identity = "1" AND u.id = ?`
 		let farm = await db.query(_sql, id);
@@ -52,6 +52,23 @@ const users = {
 			let result = await db.query(_sql, data);
 			return result;
 		}
+
+	},
+
+	async updateFarm(id, data, bannerURL){
+		let _sql = `UPDATE farms SET about_intro = ?`
+
+		if(bannerURL){
+			_sql = _sql + ', banner_pic_url = ?'
+			data.psuh(bannerURL)
+		}
+
+		_sql = _sql + ' WHERE seller_id = ?'
+		data.push(id);
+		let result = await db.query(_sql, data);
+		return result;
+
+
 
 	}
 
