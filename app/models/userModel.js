@@ -9,7 +9,11 @@ const users = {
 	},
 	
 	async findFavoriteFarms(id) {
-		let _sql = 'SELECT f.id, f.farm_id FROM favorite f WHERE f.buyer_id = ?';
+		let _sql = `SELECT fa.farm_id, u.display_name, u.phone_number, u.address, u.profile_pic_url
+					FROM favorite fa
+					INNER JOIN farms f ON fa.farm_id = f.id
+					INNER JOIN users u ON f.seller_id = u.id
+					WHERE fa.buyer_id = ?`;
 		let farms = await db.query(_sql, id);
 		return farms;
 	},
