@@ -13,13 +13,13 @@ const users = {
 					FROM favorite fa
 					INNER JOIN farms f ON fa.farm_id = f.id
 					INNER JOIN users u ON f.seller_id = u.id
-					WHERE fa.buyer_id = ?`;
+					WHERE fa.buyer_id = ? AND fa.active = 1`;
 		let farms = await db.query(_sql, id);
 		return farms;
 	},
 
 	async findFarmById(id) {
-		let _sql = `SELECT * FROM users u
+		let _sql = `SELECT f.banner_pic_url FROM users u
 					INNER JOIN farms f ON u.id = f.seller_id
 					WHERE u.identity = "1" AND id = ?`
 		let farm = await db.query(_sql, id);
