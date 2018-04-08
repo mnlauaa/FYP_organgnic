@@ -60,7 +60,7 @@ const users = {
 
 		if(bannerURL){
 			_sql = _sql + ', banner_pic_url = ?'
-			data.psuh(bannerURL)
+			data.push(bannerURL)
 		}
 
 		_sql = _sql + ' WHERE seller_id = ?'
