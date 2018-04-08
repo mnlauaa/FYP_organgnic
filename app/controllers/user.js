@@ -3,6 +3,7 @@ const config = require('../../config')
 
 module.exports = {
     getMe,
+    getMeFarm,
     getUserById,
     getFavoriteFarm,
     getfarmById,
@@ -15,6 +16,12 @@ module.exports = {
 async function getMe(ctx){
     let id = ctx.state.user.id;
     let users = await userModel.findUserById(id);
+    ctx.body = users[0];
+}
+
+async function getMeFarm(ctx){
+    let id = ctx.state.user.id;
+    let users = await userModel.findFarmById(id);
     ctx.body = users[0];
 }
 
@@ -32,7 +39,7 @@ async function getFavoriteFarm(ctx){
 
 async function getfarmById(ctx){
     let id = ctx.params.id;
-	let farm = await userModel.findUserById(id);
+	let farm = await userModel.findFarmById(id);
     ctx.body = farm[0];
 }
 

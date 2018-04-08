@@ -25,6 +25,7 @@ const userIconUpload = multer({ storage: storage })
 /* router 1 (/me) */
 let me = new Router()
     .get('/', passport.authenticate('jwt', { session: false }), userCtrl.getMe)
+    .get('/farm', passport.authenticate('jwt', { session: false }), userCtrl.getMeFarm)
     .get('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.getMyShoppingCart)
     .get('/order', orderCrtl.getMyOrder)
     .get('/chat', chatCtrl.getMyChat)
