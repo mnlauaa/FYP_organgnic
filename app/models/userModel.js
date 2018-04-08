@@ -21,7 +21,7 @@ const users = {
 	async findFarmById(id) {
 		let _sql = `SELECT f.banner_pic_url FROM users u
 					INNER JOIN farms f ON u.id = f.seller_id
-					WHERE u.identity = "1" AND id = ?`
+					WHERE u.identity = "1" AND u.id = ?`
 		let farm = await db.query(_sql, id);
 		return farm;
 	},
