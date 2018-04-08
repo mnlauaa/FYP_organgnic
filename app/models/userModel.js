@@ -53,6 +53,23 @@ const users = {
 			return result;
 		}
 
+	},
+
+	async updateFarm(id, data, bannerURL){
+		let _sql = `UPDATE farms SET about_intro = ?`
+
+		if(bannerURL){
+			_sql = _sql + ', banner_pic_url = ?'
+			data.psuh(bannerURL)
+		}
+
+		_sql = _sql + ' WHERE seller_id = ?'
+		data.push(id);
+		let result = await db.query(_sql, data);
+		return result;
+
+
+
 	}
 
 	// async getAll(table) {

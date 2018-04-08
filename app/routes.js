@@ -13,15 +13,18 @@ const chatCtrl = require('./controllers/chat');
 const db = require('./utils/database');
 
 
-const storage = multer.diskStorage({
+const userStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './uploads/icon/')
+        cb(null, './uploads/user/')
     },
     filename: function (req, file, cb) {
-        cb(null, 'icon-' + Date.now() + '.png')
+        cb(null, file.originalname)
     }
 })
-const userIconUpload = multer({ storage: storage })
+
+const userUpload = multer({ storage: userStorage })
+
+
 /* router 1 (/me) */
 let me = new Router()
     .get('/', passport.authenticate('jwt', { session: false }), userCtrl.getMe)
@@ -35,7 +38,8 @@ let me = new Router()
     .post('/logout', authCtrl.postLogout)
     .post('/fb', authCtrl.postFb)
     .post('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.postMyShoppingCart)
-    .put('/', passport.authenticate('jwt', { session: false }), userIconUpload.single('icon'), userCtrl.putMe)
+    .put('/', passport.authenticate('jwt', { session: false }), userUpload.single('icon'), userCtrl.putMe)
+    .put('/farm', passport.authenticate('jwt', { session: false }), userUpload.fields([{ name: 'icon', maxCount: 1 }, { name: 'banner', maxCount: 1 }]), userCtrl.putMeFarm)
 
 /* router 2 (/user) */
 let users = new Router()
