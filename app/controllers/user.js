@@ -9,7 +9,8 @@ module.exports = {
     getfarmById,
     getFarmList,
     getFarmReview,
-    putMe
+    putMe,
+    putMeFarm
     // getBuyers
 }
 
@@ -61,10 +62,34 @@ async function putMe(ctx){
     ]
     let profile_pic = null;
     if(ctx.req.file)
-        profile_pic = config.SERVER.IP + 'icon/' + ctx.req.file.filename;
+        profile_pic = config.SERVER.IP + 'user/' + ctx.req.file.filename;
     await userModel.updateUser(id, data, profile_pic);
     ctx.body = { success: "succes" };
 }
+
+async function putMeFarm(ctx){
+    let id = ctx.state.user.id;
+    let data = [
+        ctx.req.body.display_name,
+        ctx.req.body.address,
+        ctx.req.body.phone_number 
+    ]
+    let profile_pic, banner_pic;
+    if(ctx.req.files){
+        profile_pic = ctx.req.files.icon;
+        banner_pic = ctx.req.files.banner
+        if(profile_pic)
+            profile_pic = config.SERVER.IP + 'user/' + profile_pic[0].filename;
+        if(banner_pic)
+            banner_pic = config.SERVER.IP + 'user/' + banner_pic[0].filename;
+    }
+    
+    await userModel.updateUser(id, data, profile_pic);
+    await userModel.updateFarm(id, [ctx.req.body.about_intro], banner_pic);
+    ctx.body = { success: "succes" };
+}
+
+
 
 // async function getBuyers(ctx){
 // 	let buyers = await userModel.getAll('buyers');
