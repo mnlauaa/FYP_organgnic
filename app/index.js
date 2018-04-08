@@ -3,6 +3,8 @@ const bodyParser = require('koa-bodyparser');
 const passport = require('koa-passport')
 const logger = require('koa-logger');
 const cors = require('koa2-cors');
+const serve = require('koa-static');
+
 const routers = require('./routes');
 const config = require('../config');
 const db = require('./utils/database');
@@ -14,17 +16,9 @@ auth.init();
 
 app.use(logger())
     .use(cors())
-    // .use(async (ctx, next)=>{
-    //      try {
-    //         auth.init();
-    //         await next()
-    //     }catch(err) {
-    //         ctx.body = err.message
-    //         ctx.status = err.status || 500
-    //      }
-    //  })
     .use(bodyParser())
     .use(passport.initialize())
+    .use(serve('uploads'))
     .use(routers.routes())
 //   catch err
     // .use(async (ctx, next)=>{

@@ -45,7 +45,18 @@ async function getFarmReview(ctx){
 }
 
 async function putMe(ctx){
-    
+    console.log(ctx.req.file);
+    console.log(ctx.req.body);
+
+    let display_name = ctx.req.body.display_name
+    let address = ctx.req.body.address
+    let phone_number = ctx.req.body.phone_number
+    // let profile_pic = ctx.request.body.profile_pic_url
+    // base64Img.img(profile_pic, 'D:\\', 'abc', (err, path)=>{})
+    // console.log(profile_pic);
+
+
+    ctx.body = {hello: "hello"};
 }
 
 // async function getBuyers(ctx){

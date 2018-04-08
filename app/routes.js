@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const passport = require('koa-passport');
-// const testCtrl = require('./controllers/test');
+const multer = require('koa-multer');
+
 const userCtrl = require('./controllers/user');
 const authCtrl = require('./controllers/auth');
 const productCrtl = require('./controllers/product');
@@ -8,9 +9,19 @@ const orderCrtl = require('./controllers/order');
 const newsCtrl = require('./controllers/news');
 const chatCtrl = require('./controllers/chat');
 
+
 const db = require('./utils/database');
 
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/icon/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, 'icon-' + Date.now() + '.png')
+    }
+})
+const userIconUpload = multer({ storage: storage })
 /* router 1 (/me) */
 let me = new Router()
     .get('/', passport.authenticate('jwt', { session: false }), userCtrl.getMe)
@@ -23,7 +34,7 @@ let me = new Router()
     .post('/logout', authCtrl.postLogout)
     .post('/fb', authCtrl.postFb)
     .post('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.postMyShoppingCart)
-    .put('/', userCtrl.putMe)
+    .put('/', passport.authenticate('jwt', { session: false }), userIconUpload.single('icon'), userCtrl.putMe)
 
 /* router 2 (/user) */
 let users = new Router()
@@ -56,24 +67,15 @@ let chats = new Router()
     .post('/', chatCtrl.postChat)
 
 let router = new Router()
+
 router.use('/me', me.routes(), me.allowedMethods())
 router.use('/users', users.routes(), users.allowedMethods())
 router.use('/products', products.routes(), products.allowedMethods())
 router.use('/orders', orders.routes(), orders.allowedMethods())
 router.use('/news', news.routes(), news.allowedMethods())
 
-    // .get('/test', passport.authenticate('jwt', { session: false }), testCtrl.testing)
-    // .post('/login', passport.authenticate('normal-login', {session: false}), authCtrl.postLogin)
-    // .get('/buyer/:id', userCtrl.getUser)
-    // .get('/seller/:id', userCtrl.getUser)
-    // .get('/seller', userCtrl.getSellerList)
-    // .get('/product', productCrtl.getProducts)
-    // .get('/product/:id', productCrtl.getProductById)
-    // .get('/order_form', productCrtl.getOrderForms)
-    // .get('/order_form/:id', productCrtl.getOrderFormById)
-    // .get('/record', recoedCrtl.getChatLogs)
-    // .get('/record/:id', recoedCrtl.getChatLogsById)
-    // .get('record/:sender_id', recoedCrtl.getChatLogsBySender)
-    // .post('/order_form/', productCrtl.postOrderForms)
+// router.get('/',  (ctx)=>{
+//     ctx.body= "hello"
+// })
 
 module.exports = router
