@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel');
+const config = require('../../config')
 
 module.exports = {
     getMe,
@@ -45,18 +46,17 @@ async function getFarmReview(ctx){
 }
 
 async function putMe(ctx){
-    console.log(ctx.req.file);
-    console.log(ctx.req.body);
-
-    let display_name = ctx.req.body.display_name
-    let address = ctx.req.body.address
-    let phone_number = ctx.req.body.phone_number
-    // let profile_pic = ctx.request.body.profile_pic_url
-    // base64Img.img(profile_pic, 'D:\\', 'abc', (err, path)=>{})
-    // console.log(profile_pic);
-
-
-    ctx.body = {hello: "hello"};
+    let id = ctx.state.user.id;
+    let data = [
+        ctx.req.body.display_name,
+        ctx.req.body.address,
+        ctx.req.body.phone_number    
+    ]
+    let profile_pic = null;
+    if(ctx.req.file)
+        profile_pic = config.SERVER.IP + 'icon/' + ctx.req.file.filename;
+    await userModel.updateUser(id, data, profile_pic);
+    ctx.body = { success: "succes" };
 }
 
 // async function getBuyers(ctx){

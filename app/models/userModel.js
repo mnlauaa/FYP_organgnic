@@ -31,6 +31,26 @@ const users = {
 		return farms;
 	},
 
+	async updateUser(id, data, imgURL){
+		if(imgURL){
+			data.push(imgURL);
+			data.push(id);
+			let _sql = `UPDATE users 
+						SET display_name = ?, address = ?, phone_number = ?, profile_pic_url = ?
+						WHERE id = ?`
+			let result = await db.query(_sql, data);
+			return result;
+		} else {
+			data.push(id);
+			let _sql = `UPDATE users 
+						SET display_name = ?, address = ?, phone_number = ?
+						WHERE id = ?`
+			let result = await db.query(_sql, data);
+			return result;
+		}
+
+	}
+
 	// async getAll(table) {
 	// let _sql= 'SELECT * FROM ?? ';
 	// return await database.query(_sql, [ table ]);
