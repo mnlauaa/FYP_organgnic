@@ -40,6 +40,7 @@ let me = new Router()
     .post('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.postMyShoppingCart)
     .put('/', passport.authenticate('jwt', { session: false }), userUpload.single('icon'), userCtrl.putMe)
     .put('/farm', passport.authenticate('jwt', { session: false }), userUpload.fields([{ name: 'icon', maxCount: 1 }, { name: 'banner', maxCount: 1 }]), userCtrl.putMeFarm)
+    .delete('/favourite/:id', passport.authenticate('jwt', { session: false }), userCtrl.deleteMeFavorite)
 
 /* router 2 (/user) */
 let users = new Router()
