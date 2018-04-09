@@ -10,7 +10,8 @@ module.exports = {
     getFarmList,
     getFarmReview,
     putMe,
-    putMeFarm
+    putMeFarm,
+    deleteMeFavorite
     // getBuyers
 }
 
@@ -87,6 +88,14 @@ async function putMeFarm(ctx){
     await userModel.updateUser(id, data, profile_pic);
     await userModel.updateFarm(id, [ctx.req.body.about_intro], banner_pic);
     ctx.body = { success: "succes" };
+}
+
+async function deleteMeFavorite(ctx){
+    console.log("hello")
+    let id = ctx.state.user.id;
+    let farm_id = ctx.params.id;
+    await userModel.deleteMyFavorite(id, farm_id);
+    ctx.body = { success: "succes" }
 }
 
 

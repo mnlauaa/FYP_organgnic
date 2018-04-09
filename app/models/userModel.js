@@ -67,9 +67,12 @@ const users = {
 		data.push(id);
 		let result = await db.query(_sql, data);
 		return result;
+	},
 
-
-
+	async deleteMyFavorite(id, farm_id){
+		let _sql = `UPDATE favorite SET active = 0 WHERE buyer_id = ? AND farm_id = ?`
+		let result = await db.query(_sql, [id, farm_id])
+		return result;
 	}
 
 	// async getAll(table) {
