@@ -9,8 +9,11 @@ module.exports = {
     getfarmById,
     getFarmList,
     getFarmReview,
+    postMeFarmPickup,
     putMe,
     putMeFarm,
+    putMeFarmSetting,
+    putMeFarmPickup,
     deleteMeFavorite
     // getBuyers
 }
@@ -24,6 +27,8 @@ async function getMe(ctx){
 async function getMeFarm(ctx){
     let id = ctx.state.user.id;
     let users = await userModel.findFarmById(id);
+    let pickup = await userModel.findFarmPickUp(id)
+    users[0].pickup = pickup;
     ctx.body = users[0];
 }
 
@@ -53,6 +58,15 @@ async function getFarmList(ctx){
 async function getFarmReview(ctx){
     
 }
+
+async function postMeFarmPickup(ctx){
+    let id = ctx.state.user.id;
+    let location = ctx.request.body.location;
+    let farms = await userModel.findFarmById(id);
+    let result = await userModel.addFarmPickup(farms[0].farm_id, location);
+	ctx.body = {success: result};
+}
+
 
 async function putMe(ctx){
     let id = ctx.state.user.id;
@@ -90,8 +104,26 @@ async function putMeFarm(ctx){
     ctx.body = { success: "succes" };
 }
 
+
+async function putMeFarmSetting(ctx){
+    let id = ctx.state.user.id;
+    let column = ctx.request.body.type;
+    let value = ctx.request.body.value;
+    let result = await userModel.updateFarmSetting(id, column, value);
+    ctx.body = { success: result };
+}
+
+
+async function putMeFarmPickup(ctx){
+    let id = ctx.state.user.id;
+    let item_id = ctx.params.id;
+    let column = ctx.request.body.type;
+    let value = ctx.request.body.value;
+    let result = await userModel.updateFarmPickup(id, column, value, item_id);
+    ctx.body = { success: result };
+}
+
 async function deleteMeFavorite(ctx){
-    console.log("hello")
     let id = ctx.state.user.id;
     let farm_id = ctx.params.id;
     await userModel.deleteMyFavorite(id, farm_id);

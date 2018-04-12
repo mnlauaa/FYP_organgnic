@@ -38,8 +38,11 @@ let me = new Router()
     .post('/logout', authCtrl.postLogout)
     .post('/fb', authCtrl.postFb)
     .post('/shopping_cart', passport.authenticate('jwt', { session: false }), orderCrtl.postMyShoppingCart)
+    .post('/farm/pickup', passport.authenticate('jwt', { session: false }), userCtrl.postMeFarmPickup)
     .put('/', passport.authenticate('jwt', { session: false }), userUpload.single('icon'), userCtrl.putMe)
     .put('/farm', passport.authenticate('jwt', { session: false }), userUpload.fields([{ name: 'icon', maxCount: 1 }, { name: 'banner', maxCount: 1 }]), userCtrl.putMeFarm)
+    .put('/farm/setting', passport.authenticate('jwt', { session: false }), userCtrl.putMeFarmSetting)
+    .put('/farm/pickup/:id', passport.authenticate('jwt', { session: false }), userCtrl.putMeFarmPickup)
     .delete('/favourite/:id', passport.authenticate('jwt', { session: false }), userCtrl.deleteMeFavorite)
 
 /* router 2 (/user) */
