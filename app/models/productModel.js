@@ -3,13 +3,19 @@ const db = require('../utils/database')
 const products = {
 
 	async getProductById(id){
-		let _sql = 'SELECT * FROM products WHERE id = ?';
+		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.classification, p.qty, p.price, p.weight, 
+						   (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
+					FROM products p 
+					INNER JOIN farms f ON f.id = p.farm_id
+					INNER JOIN users u ON f.seller_id = u.id
+					WHERE p.active = 1 AND p.id = ?`;
 		let product = await db.query(_sql, id);
 		return product
 	},
 
 	async getAllProducts(order_sql, filter_sql, keyword){
-		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.qty, p.price, p.weight, (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
+		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.classification, p.qty, p.price, p.weight,
+						   (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
 					FROM products p 
 					INNER JOIN farms f ON f.id = p.farm_id
 					INNER JOIN users u ON f.seller_id = u.id
@@ -18,6 +24,18 @@ const products = {
 		_sql = _sql + order_sql;
 		let products = await db.query(_sql, [keyword, keyword]);
 		return products 
+	},
+
+	async getRelatedProduct(product_class, id){
+		let _sql = `SELECT p.id, p.name, u.display_name, (p.rating / p.rating_number) AS rating, p.image_url, p.classification
+					FROM products p
+					INNER JOIN farms f ON f.id = p.farm_id
+					INNER JOIN users u ON f.seller_id = u.id
+					WHERE p.active = 1 AND p.qty > 0 AND p.classification = ? AND p.id <> ?
+					ORDER BY RAND()
+					LIMIT 6`;
+		let products = await db.query(_sql, [product_class, id]);
+		return products
 	},
 
 	async getSearchResult(filter_sql, keyword){
