@@ -3,6 +3,7 @@ const productModel = require('../models/productModel');
 module.exports = {
     getProductList,
 	getProductById,
+	getRelatedProduct,
 	getProductReview,
 	postProduct,
 	putProduct
@@ -14,6 +15,7 @@ module.exports = {
 async function getProductList(ctx) {
 	let sorting = Number(ctx.query.sorting) || null;
 	let keyword = ctx.query.keyword || null;
+	let prod_class = ctx.query.class || null;
 	let brand = ctx.query.brand || null;
 	let price_below = ctx.query.price_below || null;
 	let price_above = ctx.query.price_above || null;
@@ -54,8 +56,14 @@ async function getProductList(ctx) {
 			filter_sql = filter_sql + " OR p.farm_id = " + brand[i];
 		filter_sql = filter_sql + ')'
 	}
-	
 
+	if(prod_class){
+		filter_sql = filter_sql + ' AND (p.classification = ' + prod_class[0];
+		for(var i = 1; i < prod_class.length; i++)
+			filter_sql = filter_sql + " OR p.classification = " + prod_class[i];
+		filter_sql = filter_sql + ')'
+	}
+	
 	if(price_below)
 		filter_sql = filter_sql + " AND p.price < " + price_below;
 	
@@ -72,7 +80,14 @@ async function getProductList(ctx) {
 async function getProductById(ctx) {
 	let id = ctx.params.id;
 	let product = await productModel.getProductById(id);
-	ctx.body = product;
+	ctx.body = product[0];
+}
+
+async function getRelatedProduct(ctx) {
+	let product_class = ctx.query.product_class
+	let id = ctx.query.id;
+	let products = await productModel.getRelatedProduct(product_class, id);
+	ctx.body = products;
 }
 
 async function getProductReview(ctx) {
