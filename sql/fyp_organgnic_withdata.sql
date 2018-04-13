@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.7.9
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 12, 2018 at 01:20 PM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.2.0
+-- 主機: localhost
+-- 產生時間： 2018 年 04 月 13 日 06:58
+-- 伺服器版本: 10.1.31-MariaDB
+-- PHP 版本： 7.2.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `fyp_organgnic`
+-- 資料庫： `fyp_organgnic`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chat_logs`
+-- 資料表結構 `chat_logs`
 --
 
 CREATE TABLE `chat_logs` (
@@ -40,7 +40,7 @@ CREATE TABLE `chat_logs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `farms`
+-- 資料表結構 `farms`
 --
 
 CREATE TABLE `farms` (
@@ -61,17 +61,17 @@ CREATE TABLE `farms` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `farms`
+-- 資料表的匯出資料 `farms`
 --
 
 INSERT INTO `farms` (`id`, `seller_id`, `about_intro`, `banner_pic_url`, `shipping_cost`, `shipping_margin`, `home_additional_cost`, `bank_deposit_info`, `margin_on`, `coupon_on`, `home_on`, `bank_deposit_on`, `pay_after_on`, `active`) VALUES
 (1, 2, 'Hi, I need some thing here', 'http://vml1wk037.cse.ust.hk:3000/user/banner-1523206819727.png', 0, 0, 0, NULL, 1, 1, 1, 0, 1, 1),
-(2, 3, NULL, NULL, 30, 400, 20, 'HSBC account: 123-456-789-000', 1, 0, 1, 1, 1, 1);
+(2, 3, NULL, NULL, 30, 400, 20, 'HSBC account: 123-456-789-000', 0, 0, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `farms_pickup`
+-- 資料表結構 `farms_pickup`
 --
 
 CREATE TABLE `farms_pickup` (
@@ -83,7 +83,7 @@ CREATE TABLE `farms_pickup` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `farms_pickup`
+-- 資料表的匯出資料 `farms_pickup`
 --
 
 INSERT INTO `farms_pickup` (`id`, `farm_id`, `location`, `func_on`, `active`) VALUES
@@ -95,7 +95,7 @@ INSERT INTO `farms_pickup` (`id`, `farm_id`, `location`, `func_on`, `active`) VA
 -- --------------------------------------------------------
 
 --
--- Table structure for table `favorite`
+-- 資料表結構 `favorite`
 --
 
 CREATE TABLE `favorite` (
@@ -106,7 +106,7 @@ CREATE TABLE `favorite` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `favorite`
+-- 資料表的匯出資料 `favorite`
 --
 
 INSERT INTO `favorite` (`id`, `farm_id`, `buyer_id`, `active`) VALUES
@@ -115,7 +115,7 @@ INSERT INTO `favorite` (`id`, `farm_id`, `buyer_id`, `active`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `news`
+-- 資料表結構 `news`
 --
 
 CREATE TABLE `news` (
@@ -129,19 +129,19 @@ CREATE TABLE `news` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `news`
+-- 資料表的匯出資料 `news`
 --
 
 INSERT INTO `news` (`id`, `farm_id`, `datetime`, `title`, `description`, `image_url`, `active`) VALUES
 (1, 1, '2018-04-01 17:15:00', 'Potato buy one get one free', 'From 1/2/2017 to 1/3/2018, you may enjoy a buy one get one free on our potato!', 'https://cdn1.medicalnewstoday.com/content/images/articles/280/280579/potatoes-can-be-healthful.jpg', 1),
-(2, 0, '2018-04-09 23:06:17', 'test', 'testing', 'null', 1),
+(2, 1, '2018-04-09 23:06:17', 'test', 'testing', 'null', 1),
 (3, 0, '2018-04-09 23:11:04', 'test', 'testing', 'null', 1),
 (4, 0, '2018-04-09 23:13:09', 'test', 'testing', 'null', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `order_forms`
+-- 資料表結構 `order_forms`
 --
 
 CREATE TABLE `order_forms` (
@@ -154,7 +154,7 @@ CREATE TABLE `order_forms` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `order_forms`
+-- 資料表的匯出資料 `order_forms`
 --
 
 INSERT INTO `order_forms` (`id`, `farm_id`, `buyer_id`, `date`, `status`, `active`) VALUES
@@ -164,13 +164,14 @@ INSERT INTO `order_forms` (`id`, `farm_id`, `buyer_id`, `date`, `status`, `activ
 -- --------------------------------------------------------
 
 --
--- Table structure for table `products`
+-- 資料表結構 `products`
 --
 
 CREATE TABLE `products` (
   `id` int(11) UNSIGNED NOT NULL,
   `farm_id` int(11) UNSIGNED NOT NULL,
   `name` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `classification` varchar(500) NOT NULL,
   `qty` int(11) NOT NULL,
   `price` int(11) NOT NULL,
   `weight` int(11) DEFAULT NULL,
@@ -182,18 +183,18 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `products`
+-- 資料表的匯出資料 `products`
 --
 
-INSERT INTO `products` (`id`, `farm_id`, `name`, `qty`, `price`, `weight`, `rating`, `rating_number`, `last_update`, `image_url`, `active`) VALUES
-(1, 1, 'Potato', 10, 45, 600, 14.4, 3, '2018-04-01', 'https://cdn1.medicalnewstoday.com/content/images/articles/280/280579/potatoes-can-be-healthful.jpg', 1),
-(2, 1, 'Sweet Potato', 3, 50, 300, 27, 6, '2018-04-02', 'https://www.burpee.com/dw/image/v2/ABAQ_PRD/on/demandware.static/-/Sites-masterCatalog_Burpee/default/dw367e7208/Images/Product%20Images/prod001584/prod001584.jpg?sw=322&sh=380&sm=fit', 1),
-(3, 2, 'Purple Potato', 5, 46, 400, 36, 8, '2018-04-04', 'http://www.pvmi.org/varieties/images/Purple%20Pelisse_c.jpg', 1);
+INSERT INTO `products` (`id`, `farm_id`, `name`, `classification`, `qty`, `price`, `weight`, `rating`, `rating_number`, `last_update`, `image_url`, `active`) VALUES
+(1, 1, 'Potato', 'Tubers', 10, 45, 600, 14.4, 3, '2018-04-01', 'https://cdn1.medicalnewstoday.com/content/images/articles/280/280579/potatoes-can-be-healthful.jpg', 1),
+(2, 1, 'Sweet Potato', 'Tubers', 3, 50, 300, 27, 6, '2018-04-02', 'https://www.burpee.com/dw/image/v2/ABAQ_PRD/on/demandware.static/-/Sites-masterCatalog_Burpee/default/dw367e7208/Images/Product%20Images/prod001584/prod001584.jpg?sw=322&sh=380&sm=fit', 1),
+(3, 2, 'Purple Potato', 'Tubers', 5, 46, 400, 36, 8, '2018-04-04', 'http://www.pvmi.org/varieties/images/Purple%20Pelisse_c.jpg', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `reviews`
+-- 資料表結構 `reviews`
 --
 
 CREATE TABLE `reviews` (
@@ -210,7 +211,7 @@ CREATE TABLE `reviews` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transactions`
+-- 資料表結構 `transactions`
 --
 
 CREATE TABLE `transactions` (
@@ -223,7 +224,7 @@ CREATE TABLE `transactions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `transactions`
+-- 資料表的匯出資料 `transactions`
 --
 
 INSERT INTO `transactions` (`id`, `order_id`, `product_id`, `qty`, `rating`, `active`) VALUES
@@ -237,7 +238,7 @@ INSERT INTO `transactions` (`id`, `order_id`, `product_id`, `qty`, `rating`, `ac
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- 資料表結構 `users`
 --
 
 CREATE TABLE `users` (
@@ -256,138 +257,138 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `users`
+-- 資料表的匯出資料 `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `fb_id`, `display_name`, `phone_number`, `address`, `liabilities`, `profile_pic_url`, `identity`, `iat`, `active`) VALUES
-(1, 'test', 'test', NULL, 'SamLau', 27893025, 'Home', 0, 'http://vml1wk037.cse.ust.hk:3000/user/icon-1523333815754.png', 0, '1523337145', 1),
-(2, 'seller', 'seller', NULL, 'BiG FARM', 27999999, 'I don\'t know ', 0, 'http://vml1wk037.cse.ust.hk:3000/user/icon-1523206819727.png', 1, '1523423232', 1),
-(3, 'seller2', 'seller2', NULL, 'HEALITHY FARM', 55555555, 'Hong Kong', 0, 'http://78.media.tumblr.com/21cab5fea7a46ff65a6ca559a2bcf77b/tumblr_owapvnemjP1v7o0xyo6_500.png', 1, '1523531283', 1);
+(1, 'test', 'test', NULL, 'SamLau', 27893025, 'Home', 0, 'http://vml1wk037.cse.ust.hk:3000/user/icon-1523333815754.png', 0, '1523550336', 1),
+(2, 'seller', 'seller', NULL, 'BiG FARM', 27999999, 'I don\'t know ', 0, 'http://vml1wk037.cse.ust.hk:3000/user/icon-1523206819727.png', 1, '1523590831', 1),
+(3, 'seller2', 'seller2', NULL, 'HEALITHY FARM', 55555555, 'Hong Kong', 0, 'http://78.media.tumblr.com/21cab5fea7a46ff65a6ca559a2bcf77b/tumblr_owapvnemjP1v7o0xyo6_500.png', 1, '1523532265', 1);
 
 --
--- Indexes for dumped tables
+-- 已匯出資料表的索引
 --
 
 --
--- Indexes for table `chat_logs`
+-- 資料表索引 `chat_logs`
 --
 ALTER TABLE `chat_logs`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `farms`
+-- 資料表索引 `farms`
 --
 ALTER TABLE `farms`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `farms_pickup`
+-- 資料表索引 `farms_pickup`
 --
 ALTER TABLE `farms_pickup`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `favorite`
+-- 資料表索引 `favorite`
 --
 ALTER TABLE `favorite`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `news`
+-- 資料表索引 `news`
 --
 ALTER TABLE `news`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `order_forms`
+-- 資料表索引 `order_forms`
 --
 ALTER TABLE `order_forms`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `products`
+-- 資料表索引 `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `reviews`
+-- 資料表索引 `reviews`
 --
 ALTER TABLE `reviews`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `transactions`
+-- 資料表索引 `transactions`
 --
 ALTER TABLE `transactions`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- 資料表索引 `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- 在匯出的資料表使用 AUTO_INCREMENT
 --
 
 --
--- AUTO_INCREMENT for table `chat_logs`
+-- 使用資料表 AUTO_INCREMENT `chat_logs`
 --
 ALTER TABLE `chat_logs`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `farms`
+-- 使用資料表 AUTO_INCREMENT `farms`
 --
 ALTER TABLE `farms`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `farms_pickup`
+-- 使用資料表 AUTO_INCREMENT `farms_pickup`
 --
 ALTER TABLE `farms_pickup`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `favorite`
+-- 使用資料表 AUTO_INCREMENT `favorite`
 --
 ALTER TABLE `favorite`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `news`
+-- 使用資料表 AUTO_INCREMENT `news`
 --
 ALTER TABLE `news`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `order_forms`
+-- 使用資料表 AUTO_INCREMENT `order_forms`
 --
 ALTER TABLE `order_forms`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `products`
+-- 使用資料表 AUTO_INCREMENT `products`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `reviews`
+-- 使用資料表 AUTO_INCREMENT `reviews`
 --
 ALTER TABLE `reviews`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `transactions`
+-- 使用資料表 AUTO_INCREMENT `transactions`
 --
 ALTER TABLE `transactions`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `users`
+-- 使用資料表 AUTO_INCREMENT `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;

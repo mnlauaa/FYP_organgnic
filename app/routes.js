@@ -55,6 +55,7 @@ let users = new Router()
 
 let products = new Router()
     .get('/', productCrtl.getProductList)
+    .get('/related', productCrtl.getRelatedProduct)
     .get('/:id', productCrtl.getProductById)
     .get('/:id/reviews', productCrtl.getProductReview)
     .post('/', productCrtl.postProduct)
