@@ -1,4 +1,6 @@
 const productModel = require('../models/productModel');
+const userModel = require('../models/userModel');
+const config = require('../../config')
 
 module.exports = {
     getProductList,
@@ -97,14 +99,27 @@ async function getProductReview(ctx) {
 }
 
 async function postProduct(ctx) {
+	let id = ctx.state.user.id;
+	let result = await userModel.findFarmById(id);
+	let farm_id = result[0].farm_id;
+
+	let product_image_url;
+	if(ctx.req.file)
+		product_image_url = config.SERVER.IP + 'product/' + ctx.req.file.filename;
+
+	let now = new Date();
 	let product_parms = [
-		ctx.request.body.farm_id,
-		ctx.request.body.name,
-		ctx.request.body.qty,
-		ctx.request.body.price,
-		ctx.request.body.weight
+		farm_id,
+		ctx.req.body.name,
+		ctx.req.body.classification,
+		ctx.req.body.qty,
+		ctx.req.body.price,
+		ctx.req.body.weight,
+		now,
+		product_image_url
 	]
 	let product = await productModel.addNewProduct(product_parms);
+	ctx.body = {success: product};
 }
 
 async function putProduct(ctx) {
