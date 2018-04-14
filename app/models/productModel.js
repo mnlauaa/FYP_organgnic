@@ -4,6 +4,7 @@ const products = {
 
 	async getProductById(id){
 		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.classification, p.qty, p.price, p.weight, 
+						   p.special_price, p.special_weight, p.special_expiry,
 						   (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
 					FROM products p 
 					INNER JOIN farms f ON f.id = p.farm_id
@@ -15,6 +16,7 @@ const products = {
 
 	async getAllProducts(order_sql, filter_sql, keyword){
 		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.classification, p.qty, p.price, p.weight,
+						   p.special_price, p.special_weight, p.special_expiry,
 						   (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
 					FROM products p 
 					INNER JOIN farms f ON f.id = p.farm_id
@@ -56,7 +58,7 @@ const products = {
 	},
 
 	async addNewProduct(product_parms){
-		let _sql = 'INSERT INTO products(farm_id, name, qty, price, weight) VALUES (?)';
+		let _sql = 'INSERT INTO products(farm_id, name, classification, qty, price, weight, last_update, image_url) VALUES (?)';
 		let new_product = await db.query(_sql, [product_parms]);
 		return new_product;
 	},
