@@ -63,12 +63,21 @@ const products = {
 		return new_product;
 	},
 
-	async updateProduct(id, farm_id, name, qty, price, weight, rating, rating_number, image_url){
-		let _sql = `UPDATE products 
-						SET farm_id=?, name=?, qty=?, price=?, weight=?, rating=?, rating_number=?, image_url=? 
-						WHERE id = ?`;
+	async updateProduct(product_parms, special, product_image_url, product_id, farm_id){
+		let _sql = `UPDATE products SET name = ?, classification = ?, qty = ?, price = ?, weight = ?`;
+		if(special)
+			_sql = _sql + `, special_price = ?, special_weight = ?, special_expiry = ?`;
 
-		let update_product =await db.query(_sql, [farm_id, name, qty, price, weight, rating, rating_number, image_url, id]);
+		_sql = _sql + `, last_update = ? `;
+
+		if(product_image_url)
+			_sql = _sql + `, image_url = ?`;
+		
+		_sql = _sql + `WHERE id = ? AND farm_id = ?`;
+		product_parms.push(product_id);
+		product_parms.push(farm_id);
+
+		let update_product = await db.query(_sql, product_parms);
 		return update_product;
 	},
 
