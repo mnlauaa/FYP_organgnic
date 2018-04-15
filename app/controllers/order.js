@@ -1,4 +1,5 @@
 const orderModel = require('../models/orderModel');
+const userModel = require('../models/userModel');
 const config = require('../../config')
 
 module.exports = {
@@ -7,25 +8,61 @@ module.exports = {
 	getOederById,
 	getMyOrder,
 	postOrder,
-	putOrder
+	putOrder,
+	deleteTransition,
 }
-
+// // let id = ctx.params.id;
+// let user = await userModel.findUserByFarmId(id)
+// let farm = await userModel.findFarmById(user[0].seller_id);
+// let pickup = await userModel.findFarmPickUp(user[0].seller_id)
+// farm[0].pickup = pickup;
+// ctx.body = farm[0];
 async function getMyShoppingCart(ctx) {
 	let id = ctx.state.user.id;
 	let shopping_cart = await orderModel.findMyShoppingCart(id);	
 	let temp_arry = [];
+
 	if(shopping_cart[0]){
-		temp_arry[0] = [];
+		temp_arry[0] = {};
+		temp_arry[0].productList = [];
 		let x = shopping_cart[0].farm_id;
 		let y = 0;	
-		shopping_cart.map((item)=>{
-			if(item.farm_id != x){
+
+		let user = await userModel.findUserByFarmId(x)
+		let farm = await userModel.findFarmById(user[0].seller_id);
+		farm[0].pickup = await userModel.findFarmPickUp(user[0].seller_id)
+		temp_arry[0].farm = farm[0];
+
+		for(var i = 0; i < shopping_cart.length; i++){
+			if(shopping_cart[i].farm_id != x){
 				y++;
-				x = item.farm_id;
-				temp_arry[y]=[];
+				x = shopping_cart[i].farm_id;
+				temp_arry[y] = {}
+				temp_arry[y].productList = [];
+
+				user = await userModel.findUserByFarmId(x)
+				farm = await userModel.findFarmById(user[0].seller_id);
+				farm[0].pickup = await userModel.findFarmPickUp(user[0].seller_id)
+				temp_arry[y].farm = farm[0];
 			}
-			temp_arry[y].push(item)
-		});
+			temp_arry[y].productList.push(shopping_cart[i])
+		}
+
+		// shopping_cart.map(async (item)=>{
+		// 	if(item.farm_id != x){
+		// 		y++;
+		// 		x = item.farm_id;
+		// 		temp_arry[y] = {}
+		// 		temp_arry[y].productList = [];
+
+		// 		user = await userModel.findUserByFarmId(x)
+		// 		farm = await userModel.findFarmById(user[0].seller_id);
+		// 		farm[0].pickup = await userModel.findFarmPickUp(user[0].seller_id)
+		// 		temp_arry[y].farm = farm[0];
+		// 	}
+		// 	temp_arry[y].productList.push(item)
+		// 	console.log(temp_arry[y])
+		// });
 	}	
 	ctx.body = temp_arry;
 }
@@ -76,27 +113,24 @@ async function putOrder(ctx) {
 	
 }
 
-// async function getChatLogs(ctx){
-// 	let chat_logs = await recordModel.getAllRecords();
-// 	ctx.body = chat_logs;
-// }
+async function deleteTransition(ctx) {
+	let user_id = ctx.state.user.id;
+	let transition_id = ctx.params.id;
+	let role = ctx.state.user.identity;
+	let del_order = false;
 
-// async function getChatLogsById(ctx){
-// 	let id = ctx.params.id;
-// 	let chat_log = await recordModel.getRecordById(id);
-// 	ctx.body = chat_log;
-// }
-
-// async function getChatLogsBySender(ctx){
-// 	let id = ctx.params.id;
-// 	let chat_logs = await recordModel.getRecordById(id);
-// 	ctx.body = chat_logs;
-// }
-
-// async function postChatLogs(ctx) {
-    
-// }
-
+	if(role == 0){
+		let t = await orderModel.findTransitionById(transition_id);
+		let num = await orderModel.countTransitionById(t[0].order_id);
+		console.log(num[0]);
+		if(num[0].num == 1){
+			await orderModel.deleteOrder(t[0].order_id);
+			del_order = true
+		}
+	}
+	result = await orderModel.deleteTeansactions(role, user_id, transition_id)
+	ctx.body = {del_order: del_order}
+}
 
 
 
