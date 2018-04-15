@@ -19,10 +19,10 @@ const news = {
 
     async getSearchResult(keyword){
       let _sql = `SELECT COUNT(n.id) AS num
-            FROM news n
-            INNER JOIN farms f ON f.id = n.farm_id
-            INNER JOIN users u ON f.seller_id = u.id
-            WHERE n.active = 1 AND (n.title LIKE ? OR u.display_name LIKE ?)`;
+                  FROM news n
+                  INNER JOIN farms f ON f.id = n.farm_id
+                  INNER JOIN users u ON f.seller_id = u.id
+                  WHERE n.active = 1 AND (n.title LIKE ? OR u.display_name LIKE ?)`;
       let num = await db.query(_sql, [keyword, keyword]);
       return num 
     },

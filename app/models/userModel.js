@@ -7,6 +7,12 @@ const users = {
 		let buyer = await db.query(_sql, id);
 		return buyer;
 	},
+
+	async findUserByFarmId(id) {
+		let _sql = 'SELECT seller_id FROM farms WHERE id = ?';
+		let seller = await db.query(_sql, id);
+		return seller;
+	},
 	
 	async findFavoriteFarms(id) {
 		let _sql = `SELECT fa.farm_id, u.display_name, u.phone_number, u.address, u.profile_pic_url

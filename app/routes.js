@@ -75,6 +75,7 @@ let orders = new Router()
     .get('/:id', orderCrtl.getOederById)
     .post('/', orderCrtl.postOrder)
     .put('/', orderCrtl.putOrder)
+    .delete('/translation/:id', passport.authenticate('jwt', { session: false }), orderCrtl.deleteTransition)
 
 let news = new Router()
     .get('/', newsCtrl.getNewsList)
