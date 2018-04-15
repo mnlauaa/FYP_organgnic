@@ -75,13 +75,15 @@ let orders = new Router()
     .get('/:id', orderCrtl.getOederById)
     .post('/', orderCrtl.postOrder)
     .put('/', orderCrtl.putOrder)
+    .delete('/translation/:id', passport.authenticate('jwt', { session: false }), orderCrtl.deleteTransition)
 
 let news = new Router()
     .get('/', newsCtrl.getNewsList)
     .get('/:id', newsCtrl.getNewsById)
     .post('/', newsCtrl.postNews)
     .put('/', newsCtrl.putNews)
-
+    .delete('/:id', passport.authenticate('jwt', { session: false }), newsCtrl.deleteNews)
+    
 let chats = new Router()
     .get('/:id', chatCtrl.getChatById)
     .post('/', chatCtrl.postChat)

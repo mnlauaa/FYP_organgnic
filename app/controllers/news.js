@@ -3,7 +3,8 @@ module.exports = {
     getNewsById,
     getNewsList,
     postNews,
-    putNews
+    putNews,
+    deleteNews,
 }
 
 async function getNewsById(ctx) {
@@ -13,19 +14,14 @@ async function getNewsById(ctx) {
 }
 
 async function getNewsList(ctx) {
-    // let news = await newsModel.findAllNews();
-    // ctx.body = news;
 	let keyword = ctx.query.keyword || null;
-    console.log(ctx.query.keyword);
 	if(keyword)
 		keyword = '%' + keyword + '%'
 	else
 		keyword = '%%'
     
-    console.log(keyword);
     let news_list = await newsModel.findAllNews(keyword);
     let result_num = await newsModel.getSearchResult(keyword);
-    console.log(news_list);
     ctx.body = {news_list: news_list, result_num:result_num[0].num};
 }
 
@@ -43,4 +39,10 @@ async function postNews(ctx) {
 
 async function putNews(ctx) {
     
+}
+
+async function deleteNews(ctx){
+    let id = ctx.params.id;
+    await newsModel.deleteNews(id);
+    ctx.body = { success: "succes" }
 }
