@@ -12,7 +12,8 @@ const news = {
                 FROM news n
                 INNER JOIN farms f ON n.farm_id = f.id
                 INNER JOIN users u ON f.seller_id = u.id
-                WHERE n.active = 1 AND (n.title LIKE ? OR u.display_name LIKE ?)`;	
+                WHERE n.active = 1 AND (n.title LIKE ? OR u.display_name LIKE ?)
+                ORDER BY n.datetime DESC`;	
 		let news = await db.query(_sql, [keyword, keyword]);
 		return news;
     },
