@@ -71,7 +71,8 @@ let news = new Router()
     .get('/:id', newsCtrl.getNewsById)
     .post('/', newsCtrl.postNews)
     .put('/', newsCtrl.putNews)
-
+    .delete('/:id', passport.authenticate('jwt', { session: false }), newsCtrl.deleteNews)
+    
 let chats = new Router()
     .get('/:id', chatCtrl.getChatById)
     .post('/', chatCtrl.postChat)

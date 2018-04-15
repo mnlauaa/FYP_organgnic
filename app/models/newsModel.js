@@ -12,9 +12,9 @@ const news = {
                 FROM news n
                 INNER JOIN farms f ON n.farm_id = f.id
                 INNER JOIN users u ON f.seller_id = u.id
-                WHERE n.active = 1 AND (n.title LIKE ? OR u.display_name LIKE ?)`;	
+                WHERE n.active = 1 AND (n.title LIKE ? OR u.display_name LIKE ?)`;
 		let news = await db.query(_sql, [keyword, keyword]);
-		return news;
+    return news;
     },
 
     async getSearchResult(keyword){
@@ -40,6 +40,12 @@ const news = {
 		let news = await db.query(_sql, [input]);
 		return news;
     },
+
+    async deleteNews(id){
+      let _sql = `UPDATE news SET active = 0 WHERE id = ?`
+      let del = await db.query(_sql, [id]);
+      return del;
+    }
 
 }
 
