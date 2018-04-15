@@ -21,6 +21,7 @@ async function getProductList(ctx) {
 	let brand = ctx.query.brand || null;
 	let price_below = ctx.query.price_below || null;
 	let price_above = ctx.query.price_above || null;
+	let special = ctx.query.special || null;
 
 	let order_sql;
 	let filter_sql = '';
@@ -70,7 +71,12 @@ async function getProductList(ctx) {
 		filter_sql = filter_sql + " AND p.price < " + price_below;
 	
 	if(price_above)
-		filter_sql = filter_sql + " AND p.price >" + price_above
+		filter_sql = filter_sql + " AND p.price > " + price_above
+
+	if(special){
+		let now = new Date().getTime();
+		filter_sql = filter_sql + " AND p.special_expiry >= " + now;
+	}
 
 	
 	console.log(filter_sql)
