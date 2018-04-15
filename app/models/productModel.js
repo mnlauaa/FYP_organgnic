@@ -4,6 +4,7 @@ const products = {
 
 	async getProductById(id){
 		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.classification, p.qty, p.price, p.weight, 
+						   p.special_price, p.special_weight, p.special_expiry,
 						   (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
 					FROM products p 
 					INNER JOIN farms f ON f.id = p.farm_id
@@ -15,6 +16,7 @@ const products = {
 
 	async getAllProducts(order_sql, filter_sql, keyword){
 		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.classification, p.qty, p.price, p.weight,
+						   p.special_price, p.special_weight, p.special_expiry,
 						   (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
 					FROM products p 
 					INNER JOIN farms f ON f.id = p.farm_id
@@ -56,17 +58,26 @@ const products = {
 	},
 
 	async addNewProduct(product_parms){
-		let _sql = 'INSERT INTO products(farm_id, name, qty, price, weight) VALUES (?)';
+		let _sql = 'INSERT INTO products(farm_id, name, classification, qty, price, weight, last_update, image_url) VALUES (?)';
 		let new_product = await db.query(_sql, [product_parms]);
 		return new_product;
 	},
 
-	async updateProduct(id, farm_id, name, qty, price, weight, rating, rating_number, image_url){
-		let _sql = `UPDATE products 
-						SET farm_id=?, name=?, qty=?, price=?, weight=?, rating=?, rating_number=?, image_url=? 
-						WHERE id = ?`;
+	async updateProduct(product_parms, special, product_image_url, product_id, farm_id){
+		let _sql = `UPDATE products SET name = ?, classification = ?, qty = ?, price = ?, weight = ?`;
+		if(special)
+			_sql = _sql + `, special_price = ?, special_weight = ?, special_expiry = ?`;
 
-		let update_product =await db.query(_sql, [farm_id, name, qty, price, weight, rating, rating_number, image_url, id]);
+		_sql = _sql + `, last_update = ? `;
+
+		if(product_image_url)
+			_sql = _sql + `, image_url = ?`;
+		
+		_sql = _sql + `WHERE id = ? AND farm_id = ?`;
+		product_parms.push(product_id);
+		product_parms.push(farm_id);
+
+		let update_product = await db.query(_sql, product_parms);
 		return update_product;
 	},
 

@@ -1,4 +1,6 @@
 const productModel = require('../models/productModel');
+const userModel = require('../models/userModel');
+const config = require('../../config')
 
 module.exports = {
     getProductList,
@@ -19,6 +21,7 @@ async function getProductList(ctx) {
 	let brand = ctx.query.brand || null;
 	let price_below = ctx.query.price_below || null;
 	let price_above = ctx.query.price_above || null;
+	let special = ctx.query.special || null;
 
 	let order_sql;
 	let filter_sql = '';
@@ -68,7 +71,12 @@ async function getProductList(ctx) {
 		filter_sql = filter_sql + " AND p.price < " + price_below;
 	
 	if(price_above)
-		filter_sql = filter_sql + " AND p.price >" + price_above
+		filter_sql = filter_sql + " AND p.price > " + price_above
+
+	if(special){
+		let now = new Date().getTime();
+		filter_sql = filter_sql + " AND p.special_expiry >= " + now;
+	}
 
 	
 	console.log(filter_sql)
@@ -97,34 +105,60 @@ async function getProductReview(ctx) {
 }
 
 async function postProduct(ctx) {
+	let id = ctx.state.user.id;
+	let result = await userModel.findFarmById(id);
+	let farm_id = result[0].farm_id;
+
+	let product_image_url;
+	if(ctx.req.file)
+		product_image_url = config.SERVER.IP + 'product/' + ctx.req.file.filename;
+
+	let now = new Date();
 	let product_parms = [
-		ctx.request.body.farm_id,
-		ctx.request.body.name,
-		ctx.request.body.qty,
-		ctx.request.body.price,
-		ctx.request.body.weight
+		farm_id,
+		ctx.req.body.name,
+		ctx.req.body.classification,
+		ctx.req.body.qty,
+		ctx.req.body.price,
+		ctx.req.body.weight,
+		now,
+		product_image_url
 	]
 	let product = await productModel.addNewProduct(product_parms);
+	ctx.body = {success: product};
 }
 
 async function putProduct(ctx) {
-	let id = ctx.request.body.id;
-	let target = await productModel.getProductById(id);
-	if(!target){
-		console.log("target not exisit!");
-		return;
-	}
-	let farm_id =ctx.request.body.farm_id;
-	let name = ctx.request.body.name;
-	let qty = ctx.request.body.qty;
-	let	price = ctx.request.body.price;
-	let	weight = ctx.request.body.weight;
-	let	rating = ctx.request.body.rating;
-	let	rating_number = ctx.request.body.rating_number;
-	let	image_url = ctx.request.body.image_url;
+	let id = ctx.state.user.id;
+	let product_id = ctx.params.id;
+	let result = await userModel.findFarmById(id);
+	let farm_id = result[0].farm_id;
+	let special = false;
+	let now = new Date(); 
 
-	let update_product = await productModel.updateProduct(id, farm_id, name, qty, price, weight, rating, rating_number, image_url);
-	ctx.body = "Successfully update!";
+	let product_image_url = null;
+	if(ctx.req.file)
+		product_image_url = config.SERVER.IP + 'product/' + ctx.req.file.filename;
+
+	let product_parms = [
+		ctx.req.body.name,
+		ctx.req.body.classification,
+		ctx.req.body.qty,
+		ctx.req.body.price,
+		ctx.req.body.weight
+	]
+
+	if(ctx.req.body.special_price && ctx.req.body.special_weight && ctx.req.body.special_expiry){
+		special = true;
+		product_parms.push(ctx.req.body.special_price);
+		product_parms.push(ctx.req.body.special_weight);
+		product_parms.push(ctx.req.body.special_expiry);
+	}
+
+	product_parms.push(now);
+
+	let update_product = await productModel.updateProduct(product_parms, special, product_image_url, product_id, farm_id);
+	ctx.body = {success: update_product};
 	
 }
 

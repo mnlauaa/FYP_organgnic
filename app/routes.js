@@ -24,6 +24,17 @@ const userStorage = multer.diskStorage({
 
 const userUpload = multer({ storage: userStorage })
 
+const productStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/product/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+
+const productUpload = multer({ storage: productStorage })
+
 
 /* router 1 (/me) */
 let me = new Router()
@@ -51,15 +62,14 @@ let users = new Router()
     .get('/:id', userCtrl.getUserById)
     .get('/:id/farms', userCtrl.getfarmById)
     .get('/:id/farms/reviews', userCtrl.getFarmReview)
-    
 
 let products = new Router()
     .get('/', productCrtl.getProductList)
     .get('/related', productCrtl.getRelatedProduct)
     .get('/:id', productCrtl.getProductById)
     .get('/:id/reviews', productCrtl.getProductReview)
-    .post('/', productCrtl.postProduct)
-    .put('/', productCrtl.putProduct)
+    .post('/', passport.authenticate('jwt', { session: false }), productUpload.single('product'), productCrtl.postProduct)
+    .put('/:id', passport.authenticate('jwt', { session: false }), productUpload.single('product'), productCrtl.putProduct)
 
 let orders = new Router()
     .get('/:id', orderCrtl.getOederById)
