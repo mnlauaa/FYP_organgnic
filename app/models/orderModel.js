@@ -4,7 +4,9 @@ const config = require('../../config')
 const order = {
 	async findMyShoppingCart(id) {
 		let _sql = `SELECT o.farm_id, u.display_name, o.date, t.id AS transaction_id, t.product_id, t.qty,
-						   p.name, p.qty AS products_left, p.price, p.weight, p.image_url 
+						   p.name, p.qty AS products_left, p.price, p.weight, 
+						   p.special_price, p.special_weight, p.special_expiry, p.image_url ,
+						   o.status, o.id AS order_id
 					FROM order_forms o 
 					INNER JOIN transactions t ON o.id = t.order_id
 					INNER JOIN products p ON t.product_id = p.id
@@ -67,6 +69,29 @@ const order = {
 	async CreateTeansactions(input) {
 		let _sql = 'INSERT INTO transactions (order_id, product_id, qty) VALUES(?)';
 		let result = await db.query(_sql, [input]);
+		return result;
+	},
+
+	async updateTransition(role, user_id, transition_id, sup_sql) {
+		let _sql = `UPDATE transactions t
+					INNER JOIN order_forms o ON o.id = t.order_id
+					INNER JOIN farms f ON f.id = o.farm_id
+					SET `
+		_sql = _sql + sup_sql;
+		_sql = _sql + `WHERE t.id = ? `
+		if(role == 0)
+			_sql += "AND o.buyer_id = ?"
+		else
+			_sql += "AND f.seller_id = ?"
+		let result = await db.query(_sql, [transition_id, user_id]);
+		return result;
+	},
+
+	async confirmShoppingCart(input) {
+		let _sql = `UPDATE order_forms
+					SET date = ?, pickup_method = ?, pickup_location = ?, payment_method = ?, deposite_method = ?, receipt_url = ?, status = 1
+					WHERE id = ? AND buyer_id = ?`
+		let result = await db.query(_sql, input);
 		return result;
 	},
 
