@@ -98,9 +98,6 @@ let chats = new Router()
     .get('/:id', chatCtrl.getChatById)
     .post('/', chatCtrl.postChat)
 
-let auth = new Router()
-    .post('/', authCtrl.postSignUp)
-
 let router = new Router()
 
 router.use('/me', me.routes(), me.allowedMethods())
@@ -108,7 +105,6 @@ router.use('/users', users.routes(), users.allowedMethods())
 router.use('/products', products.routes(), products.allowedMethods())
 router.use('/orders', orders.routes(), orders.allowedMethods())
 router.use('/news', news.routes(), news.allowedMethods())
-router.use('/auth', auth.routes(), auth.allowedMethods())
 // router.get('/',  (ctx)=>{
 //     ctx.body= "hello"
 // })
