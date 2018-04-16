@@ -46,7 +46,10 @@ async function getFavoriteFarm(ctx){
 
 async function getfarmById(ctx){
     let id = ctx.params.id;
-	let farm = await userModel.findFarmById(id);
+    let user = await userModel.findUserByFarmId(id)
+    let farm = await userModel.findFarmById(user[0].seller_id);
+    let pickup = await userModel.findFarmPickUp(user[0].seller_id)
+    farm[0].pickup = pickup;
     ctx.body = farm[0];
 }
 
