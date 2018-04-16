@@ -89,7 +89,7 @@ let orders = new Router()
 let news = new Router()
     .get('/', newsCtrl.getNewsList)
     .get('/:id', newsCtrl.getNewsById)
-    .post('/', newsCtrl.postNews)
+    .post('/', passport.authenticate('jwt', { session: false }), newsUpload.single('news'), newsCtrl.postNews)
     .put('/:id', passport.authenticate('jwt', { session: false }), newsUpload.single('news'), newsCtrl.putNews)
     .delete('/:id', passport.authenticate('jwt', { session: false }), newsCtrl.deleteNews)
     
