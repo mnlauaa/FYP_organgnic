@@ -28,9 +28,14 @@ const news = {
       return num 
     },
 
-    async postNews(input) {
-        let _sql = 'INSERT INTO news (farm_id, datetime, title, description, image_url) VALUES (?)';	
-		let news = await db.query(_sql, [input]);
+    async postNews(news_parms, news_imgae_url) {
+        let _sql = `INSERT INTO news (farm_id, title, description, datetime`;
+        if(news_imgae_url){
+          _sql += `, image_url`;
+          news_parms.push(news_imgae_url);
+        }	
+        _sql += `) VALUES (?)`;
+		let news = await db.query(_sql, [news_parms]);
 		return news;
     },
 
