@@ -47,6 +47,19 @@ const receiptStorage = multer.diskStorage({
 const receiptUpload = multer({ storage: receiptStorage })
 
 
+
+const newsStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/news/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+
+const newsUpload = multer({ storage: newsStorage })
+
+
 /* router 1 (/me) */
 let me = new Router()
     .get('/', passport.authenticate('jwt', { session: false }), userCtrl.getMe)
@@ -92,9 +105,10 @@ let orders = new Router()
 let news = new Router()
     .get('/', newsCtrl.getNewsList)
     .get('/:id', newsCtrl.getNewsById)
-    .post('/', newsCtrl.postNews)
-    .put('/', newsCtrl.putNews)
-
+    .post('/', passport.authenticate('jwt', { session: false }), newsUpload.single('news'), newsCtrl.postNews)
+    .put('/:id', passport.authenticate('jwt', { session: false }), newsUpload.single('news'), newsCtrl.putNews)
+    .delete('/:id', passport.authenticate('jwt', { session: false }), newsCtrl.deleteNews)
+    
 let chats = new Router()
     .get('/:id', chatCtrl.getChatById)
     .post('/', chatCtrl.postChat)

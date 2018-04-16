@@ -13,9 +13,9 @@ const news = {
                 INNER JOIN farms f ON n.farm_id = f.id
                 INNER JOIN users u ON f.seller_id = u.id
                 WHERE n.active = 1 AND (n.title LIKE ? OR u.display_name LIKE ?)
-                ORDER BY n.datetime DESC`;	
+                ORDER BY datetime DESC`;
 		let news = await db.query(_sql, [keyword, keyword]);
-		return news;
+    return news;
     },
 
     async getSearchResult(keyword){
@@ -28,19 +28,37 @@ const news = {
       return num 
     },
 
-    async postNews(input) {
-        let _sql = 'INSERT INTO news (farm_id, datetime, title, description, image_url) VALUES (?)';	
-		let news = await db.query(_sql, [input]);
+    async postNews(news_parms, news_imgae_url) {
+        let _sql = `INSERT INTO news (farm_id, title, description, datetime`;
+        if(news_imgae_url){
+          _sql += `, image_url`;
+          news_parms.push(news_imgae_url);
+        }	
+        _sql += `) VALUES (?)`;
+		let news = await db.query(_sql, [news_parms]);
 		return news;
     },
 
-    async putNews(input) {
-        let _sql = `UPDATE news 
-                    SET farm_id = 'Alfred Schmidt', title = '', description = '', image_url = ''
-                    WHERE id = ?;`;	
-		let news = await db.query(_sql, [input]);
-		return news;
+    async putNews(news_parms, news_imgae_url, news_id, farm_id) {
+      let _sql = `UPDATE news SET title = ?, description = ?, datetime = ?`;	
+      if(news_imgae_url){
+        _sql += `, image_url = ? `;
+        news_parms.push(news_imgae_url);
+      }
+      _sql += ` WHERE id = ? AND farm_id = ?`;
+      news_parms.push(news_id);
+      news_parms.push(farm_id);
+      let news = await db.query(_sql, news_parms);
+      return news;
     },
+
+    async delNews(news_id){
+      let _sql = `UPDATE news 
+                  SET active = 0 
+                  WHERE id = ?`;
+      let del = await db.query(_sql, [news_id]);
+      return del;
+    }
 
 }
 
