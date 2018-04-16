@@ -29,15 +29,24 @@ async function getNewsList(ctx) {
 }
 
 async function postNews(ctx) {
-    let datetime = new Date();
-    let input = [
-        ctx.request.body.farm_id, 
-        datetime, 
-        ctx.request.body.title, 
-        ctx.request.body.description, 
-        ctx.request.body.image_url
-    ];
-    let news = await newsModel.postNews(input);
+    let id = ctx.state.user.id;
+    let news_id = ctx.params.id;
+    let result = await userModel.findFarmById(id);
+    let farm_id = result[0].farm_id;
+    let now = new Date(); 
+    let news_imgae_url = null;
+    
+    if(ctx.req.file)
+        news_imgae_urlconfig.SERVER.IP + 'news/' + ctx.req.file.filename;
+    
+    let news_parms = [
+        farm_id,
+        ctx.req.body.title,
+        ctx.req.body.description,
+        now,
+    ]
+    let news = await newsModel.postNews(news_parms, news_imgae_url);
+    ctx.body = {success: news};
 }
 
 async function putNews(ctx) {
