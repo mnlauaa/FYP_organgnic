@@ -37,13 +37,13 @@ const news = {
     async putNews(news_parms, news_imgae_url, news_id, farm_id) {
       let _sql = `UPDATE news SET title = ?, description = ?, datetime = ?`;	
       if(news_imgae_url){
-        _sql += `, image_url = ?`;
+        _sql += `, image_url = ? `;
         news_parms.push(news_imgae_url);
       }
-      _sql += `WHERE id = ? AND farm_id = ?`
+      _sql += ` WHERE id = ? AND farm_id = ?`;
       news_parms.push(news_id);
       news_parms.push(farm_id);
-      let news = await db.query(_sql, [news_parms]);
+      let news = await db.query(_sql, news_parms);
       return news;
     },
 
