@@ -9,14 +9,10 @@ module.exports = {
 	getMyOrder,
 	postOrder,
 	putOrder,
+	putTransition,
 	deleteTransition,
 }
-// // let id = ctx.params.id;
-// let user = await userModel.findUserByFarmId(id)
-// let farm = await userModel.findFarmById(user[0].seller_id);
-// let pickup = await userModel.findFarmPickUp(user[0].seller_id)
-// farm[0].pickup = pickup;
-// ctx.body = farm[0];
+
 async function getMyShoppingCart(ctx) {
 	let id = ctx.state.user.id;
 	let shopping_cart = await orderModel.findMyShoppingCart(id);	
@@ -47,22 +43,6 @@ async function getMyShoppingCart(ctx) {
 			}
 			temp_arry[y].productList.push(shopping_cart[i])
 		}
-
-		// shopping_cart.map(async (item)=>{
-		// 	if(item.farm_id != x){
-		// 		y++;
-		// 		x = item.farm_id;
-		// 		temp_arry[y] = {}
-		// 		temp_arry[y].productList = [];
-
-		// 		user = await userModel.findUserByFarmId(x)
-		// 		farm = await userModel.findFarmById(user[0].seller_id);
-		// 		farm[0].pickup = await userModel.findFarmPickUp(user[0].seller_id)
-		// 		temp_arry[y].farm = farm[0];
-		// 	}
-		// 	temp_arry[y].productList.push(item)
-		// 	console.log(temp_arry[y])
-		// });
 	}	
 	ctx.body = temp_arry;
 }
@@ -110,7 +90,44 @@ async function postOrder(ctx) {
 }
 
 async function putOrder(ctx) {
-	
+	console.log(ctx.req.body);
+	let id = ctx.state.user.id;
+	let role = ctx.state.user.identity;
+	let order_status = ctx.req.body.status;
+	let order_id = ctx.params.id;
+	if(role == 0){
+		if(order_status == 0){
+			let date = new Date()
+			let input = [
+				date,
+				ctx.req.body.pickup_method,
+				ctx.req.body.pickup_location,
+				ctx.req.body.payment_method,
+				ctx.req.body.deposite_method || null,
+				ctx.req.file || null,
+				order_id,
+				id
+			]
+			console.log("input", input)
+			order = await orderModel.confirmShoppingCart(input);
+			ctx.body = {success: order};
+		}
+	}
+}
+
+async function putTransition(ctx) {
+	let user_id = ctx.state.user.id;
+	let transition_id = ctx.params.id;
+	let role = ctx.state.user.identity;
+	let sup_sql = null;
+	if(ctx.request.body.qty){
+		if(sup_sql){
+			sup_sql = sup_sql + ', '
+		}
+		sup_sql	= "qty = " + ctx.request.body.qty + " "
+	}
+	result = await orderModel.updateTransition(role, user_id, transition_id, sup_sql)
+	ctx.body = {result: result}
 }
 
 async function deleteTransition(ctx) {

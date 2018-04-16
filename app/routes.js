@@ -35,6 +35,17 @@ const productStorage = multer.diskStorage({
 
 const productUpload = multer({ storage: productStorage })
 
+const receiptStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/receipt/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+
+const receiptUpload = multer({ storage: receiptStorage })
+
 
 /* router 1 (/me) */
 let me = new Router()
@@ -74,7 +85,8 @@ let products = new Router()
 let orders = new Router()
     .get('/:id', orderCrtl.getOederById)
     .post('/', orderCrtl.postOrder)
-    .put('/', orderCrtl.putOrder)
+    .put('/:id', passport.authenticate('jwt', { session: false }), receiptUpload.single('receipt'), orderCrtl.putOrder)
+    .put('/translation/:id', passport.authenticate('jwt', { session: false }), orderCrtl.putTransition)
     .delete('/translation/:id', passport.authenticate('jwt', { session: false }), orderCrtl.deleteTransition)
 
 let news = new Router()
