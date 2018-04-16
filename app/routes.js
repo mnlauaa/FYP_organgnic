@@ -86,7 +86,6 @@ let users = new Router()
     .get('/:id', userCtrl.getUserById)
     .get('/:id/farms', userCtrl.getfarmById)
     .get('/:id/farms/reviews', userCtrl.getFarmReview)
-    .post('/', userCtrl.postUser)
 
 let products = new Router()
     .get('/', productCrtl.getProductList)
