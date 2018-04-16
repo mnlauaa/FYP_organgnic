@@ -1,4 +1,7 @@
 const newsModel = require('../models/newsModel');
+const userModel = require('../models/userModel');
+const config = require('../../config');
+
 module.exports = {
     getNewsById,
     getNewsList,
@@ -38,11 +41,29 @@ async function postNews(ctx) {
 }
 
 async function putNews(ctx) {
-    
+    let id = ctx.state.user.id;
+    let news_id = ctx.params.id;
+    let result = await userModel.findFarmById(id);
+    let farm_id = result[0].farm_id;
+    let now = new Date(); 
+    let news_imgae_url = null;
+
+    if(ctx.req.file)
+        news_imgae_url = config.SERVER.IP + 'news/' +ctx.req.file.filename;
+
+    let news_parms =[
+        ctx.req.body.title,
+        ctx.req.body.description
+    ]
+
+    news_parms.push(now);
+    let update_news = await newsModel.putNews(news_parms, news_imgae_url, news_id, farm_id);
+    ctx.body = {success: update_news};
 }
 
 async function deleteNews(ctx){
-    let id = ctx.params.id;
-    await newsModel.deleteNews(id);
+    console.log('hello');
+    let news_id = ctx.params.id;
+    await newsModel.delNews(news_id);
     ctx.body = { success: "succes" }
 }
