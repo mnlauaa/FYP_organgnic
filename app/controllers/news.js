@@ -57,6 +57,7 @@ async function putNews(ctx) {
     ]
 
     news_parms.push(now);
+    ctx.body = news_parms;
     let update_news = await newsModel.putNews(news_parms, news_imgae_url, news_id, farm_id);
     ctx.body = {success: update_news};
 }
