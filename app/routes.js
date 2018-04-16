@@ -35,6 +35,15 @@ const productStorage = multer.diskStorage({
 
 const productUpload = multer({ storage: productStorage })
 
+const newsStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/news/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+const newsUpload = multer({ storage: newsStorage })
 
 /* router 1 (/me) */
 let me = new Router()
@@ -81,7 +90,7 @@ let news = new Router()
     .get('/', newsCtrl.getNewsList)
     .get('/:id', newsCtrl.getNewsById)
     .post('/', newsCtrl.postNews)
-    .put('/:id', passport.authenticate('jwt', { session: false }), productUpload.single('news'), newsCtrl.putNews)
+    .put('/:id', passport.authenticate('jwt', { session: false }), newsUpload.single('news'), newsCtrl.putNews)
     .delete('/:id', passport.authenticate('jwt', { session: false }), newsCtrl.deleteNews)
     
 let chats = new Router()
