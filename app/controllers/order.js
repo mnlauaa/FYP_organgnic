@@ -133,10 +133,10 @@ async function postTransition(ctx) {
 }
 
 async function putOrder(ctx) {
-	console.log(ctx.req.body);
 	let id = ctx.state.user.id;
 	let role = ctx.state.user.identity;
-	let order_status = ctx.req.body.status;
+	console.log(role)
+	let order_status = Number(ctx.req.body.status);
 	let order_id = ctx.params.id;
 	if(role == 0){
 		if(order_status == 0){
@@ -165,6 +165,15 @@ async function putOrder(ctx) {
 			order = await orderModel.buyerReUploadReceipt([image_url, order_id, id]);
 			ctx.body = {success: order};
 		}
+		if(order_status == 2){
+			console.log('hi')
+			let input = [
+				1,
+				order_id
+			]
+			result = await orderModel.editOrderStatus(input);
+			ctx.body = {success: result};
+		}
 	} else {
 		if(order_status == 1){
 			if(ctx.req.body.way == 'edit'){
@@ -183,6 +192,23 @@ async function putOrder(ctx) {
 				result = await orderModel.editOrderStatus(input);
 				ctx.body = {success: result};
 			}
+		}
+		if(order_status == 3){
+			let input = [
+				4,
+				order_id
+			]
+			result = await orderModel.editOrderStatus(input);
+			ctx.body = {success: result};
+		}
+		if(order_status == 4){
+			order = await orderModel.findOrderById(order_id)
+			let input = [
+				4,
+				order_id
+			]
+			result = await orderModel.editOrderStatus(input);
+			ctx.body = {success: result};
 		}
 	}
 }

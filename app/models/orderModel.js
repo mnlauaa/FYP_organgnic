@@ -68,7 +68,7 @@ const order = {
 					FROM order_forms o
 					INNER JOIN farms f ON o.farm_id = f.id
 					INNER JOIN users u ON o.buyer_id = u.id
-					WHERE f.seller_id = ? AND o.active = 1 AND (o.status = 1 OR o.status = 3)`;
+					WHERE f.seller_id = ? AND o.active = 1 AND (o.status = 1 OR o.status = 3 OR o.status = 4)`;
 		let result = await db.query(_sql, id);
 		return result;
 	},
