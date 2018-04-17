@@ -68,7 +68,7 @@ let me = new Router()
     .get('/order', orderCrtl.getMyOrder)
     .get('/chat', chatCtrl.getMyChat)
     .get('/favourite', passport.authenticate('jwt', { session: false }), userCtrl.getFavoriteFarm)
-    .post('/', authCtrl.postSignUp)
+    .post('/',userUpload.single(''),userUpload.single('') , authCtrl.postSignUp)
     .post('/login', passport.authenticate('normal-login', { session: false }), authCtrl.postLogin)
     .post('/logout', authCtrl.postLogout)
     .post('/fb', authCtrl.postFb)
@@ -127,7 +127,6 @@ router.use('/users', users.routes(), users.allowedMethods())
 router.use('/products', products.routes(), products.allowedMethods())
 router.use('/orders', orders.routes(), orders.allowedMethods())
 router.use('/news', news.routes(), news.allowedMethods())
-
 // router.get('/',  (ctx)=>{
 //     ctx.body= "hello"
 // })
