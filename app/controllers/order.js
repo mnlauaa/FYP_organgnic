@@ -7,9 +7,13 @@ module.exports = {
 	postMyShoppingCart,
 	getOederById,
 	getMyOrder,
+	getBuyerOrder,
+	getSellerOrder,
 	postOrder,
+	postTransition,
 	putOrder,
 	putTransition,
+	deleteOrder,
 	deleteTransition,
 }
 
@@ -74,8 +78,13 @@ async function postMyShoppingCart(ctx) {
 }
 
 async function getOederById(ctx) {
-	let id = ctx.params.id;
-	order = await orderModel.findFullOrderById(id);
+	let id = ctx.state.user.id;
+	let order_id = ctx.params.id;
+	order = await orderModel.findFullOrderById(id, order_id)
+	for(let i = 0; i < orders.length; i++){
+		let transaction = await orderModel.findAllTransacionById(order[i].id)
+		order[i].transaction = transaction
+	}
 	ctx.body = order[0];
 }
 
@@ -85,8 +94,42 @@ async function getMyOrder(ctx) {
 	ctx.body = order;
 }
 
+async function getBuyerOrder(ctx){
+	let id = ctx.state.user.id;
+	orders = await orderModel.getAllBuyerOrder(id)
+	for(let i = 0; i < orders.length; i++){
+		let transaction = await orderModel.findAllTransacionById(orders[i].id)
+		orders[i].transaction = transaction
+	}
+	ctx.body = orders;
+}
+
+async function getSellerOrder(ctx){
+	let id = ctx.state.user.id;
+	console.log(id)
+	orders = await orderModel.getAllSellerOrder(id)
+	for(let i = 0; i < orders.length; i++){
+		let transaction = await orderModel.findAllTransacionById(orders[i].id)
+		orders[i].transaction = transaction
+	}
+	console.log(orders)
+	ctx.body = orders;
+}
+
 async function postOrder(ctx) {
 
+}
+
+async function postTransition(ctx) {
+	let user_id = ctx.state.user.id
+	let input = [
+		ctx.params.id,
+		ctx.request.body.product_id,
+		ctx.request.body.qty
+	]
+	console.log('postTransition', input)
+	let result = await orderModel.CreateTeansactions(input)
+	ctx.body = {success: result}
 }
 
 async function putOrder(ctx) {
@@ -98,19 +141,48 @@ async function putOrder(ctx) {
 	if(role == 0){
 		if(order_status == 0){
 			let date = new Date()
+			let image_url = null
+			if(ctx.req.file)
+				image_url = config.SERVER.IP + 'receipt/' + ctx.req.file.filename;
 			let input = [
 				date,
+				ctx.req.body.amount,
 				ctx.req.body.pickup_method,
 				ctx.req.body.pickup_location,
 				ctx.req.body.payment_method,
 				ctx.req.body.deposite_method || null,
-				ctx.req.file || null,
+				image_url || null,
 				order_id,
 				id
 			]
 			console.log("input", input)
 			order = await orderModel.confirmShoppingCart(input);
 			ctx.body = {success: order};
+		}
+		if(order_status == 1){
+			console.log(ctx.req.file)
+			let image_url = config.SERVER.IP + 'receipt/' + ctx.req.file.filename;
+			order = await orderModel.buyerReUploadReceipt([image_url, order_id, id]);
+			ctx.body = {success: order};
+		}
+	} else {
+		if(order_status == 1){
+			if(ctx.req.body.way == 'edit'){
+				let input = [
+					ctx.req.body.amount,
+					order_id,
+					id
+				]
+				result = await orderModel.sellerEditOrder(input);
+				ctx.body = {success: result};
+			} else {
+				let input = [
+					3,
+					order_id
+				]
+				result = await orderModel.editOrderStatus(input);
+				ctx.body = {success: result};
+			}
 		}
 	}
 }
@@ -120,13 +192,26 @@ async function putTransition(ctx) {
 	let transition_id = ctx.params.id;
 	let role = ctx.state.user.identity;
 	let sup_sql = null;
+	console.log(ctx.request.body)
 	if(ctx.request.body.qty){
-		if(sup_sql){
-			sup_sql = sup_sql + ', '
-		}
-		sup_sql	= "qty = " + ctx.request.body.qty + " "
+		if(sup_sql)
+			sup_sql = sup_sql + ", qty = " + ctx.request.body.qty + " "
+		else 
+			sup_sql	= "qty = " + ctx.request.body.qty + " "
+	}
+	if(ctx.request.body.product_id){
+		if(sup_sql)
+			sup_sql = sup_sql + ', product_id = ' + ctx.request.body.product_id + ' '
+		else
+		sup_sql	= "product_id = " + ctx.request.body.product_id + " "
 	}
 	result = await orderModel.updateTransition(role, user_id, transition_id, sup_sql)
+	ctx.body = {result: result}
+}
+
+async function deleteOrder(ctx) {
+	let order_id = ctx.params.id;
+	result = await orderModel.deleteOrder(order_id);
 	ctx.body = {result: result}
 }
 

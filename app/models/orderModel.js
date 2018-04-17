@@ -42,21 +42,55 @@ const order = {
 		return result;
 	},
 
-	async findFullOrderById(id) {
-		let _sql = `SELECT * FROM order_forms o 
-					INNER JOIN transactions t ON o.id = t.order_id
-					INNER JOIN products p ON t.product_id = p.id
-					WHERE o.id = ? AND o.active = 1 AND t.active = 1`;
+	async findFullOrderById(id, order_id) {
+		let _sql = `SELECT o.*, u.display_name, u.id AS buyer_id, u.profile_pic_url, f.bank_deposit_info 
+					FROM order_forms o
+					INNER JOIN farms f ON o.farm_id = f.id
+					INNER JOIN users u ON o.buyer_id = u.id
+					WHERE f.seller_id = ? AND o.id = ? AND o.active = 1 AND o.status = 1`;
+		let result = await db.query(_sql, [id, order_id]);
+		return result;
+	},
+
+	async getAllBuyerOrder(id) {
+		let _sql = `SELECT o.*, u.display_name, u.id AS seller_id, u.profile_pic_url, f.bank_deposit_info 
+					FROM order_forms o
+					INNER JOIN farms f ON o.farm_id = f.id
+					INNER JOIN users u ON f.seller_id = u.id
+					WHERE o.buyer_id = ? AND o.active = 1 AND 
+							(o.status = 1 OR o.status = 2 OR o.status = 3)`;
 		let result = await db.query(_sql, id);
 		return result;
 	},
 
+	async getAllSellerOrder(id) {
+		let _sql = `SELECT o.*, u.display_name, u.id AS buyer_id, u.profile_pic_url, f.bank_deposit_info 
+					FROM order_forms o
+					INNER JOIN farms f ON o.farm_id = f.id
+					INNER JOIN users u ON o.buyer_id = u.id
+					WHERE f.seller_id = ? AND o.active = 1 AND (o.status = 1 OR o.status = 3)`;
+		let result = await db.query(_sql, id);
+		return result;
+	},
+
+
 	async findMyFullOrder(id) {
 		let _sql = `SELECT * FROM order_forms o 
-		INNER JOIN transactions t ON o.id = t.order_id
-		INNER JOIN products p ON t.product_id = p.id
-		WHERE o.buyer_id = ? AND status <> ?`;
-		let result = await db.query(_sql, [id, config.ORDER_STATUS.SHOPPING_CART]);
+					INNER JOIN transactions t ON o.id = t.order_id
+					INNER JOIN products p ON t.product_id = p.id
+					WHERE o.buyer_id = ? AND status <> ?`;
+		let result = await db.query(_sql, id);
+		return result;
+	},
+
+	async findAllTransacionById(id){
+		let _sql = `SELECT t.id AS transaction_id, t.product_id, t.qty, p.name, 
+						   IF(p.special_expiry > NOW(), p.special_price, p.price) AS price, p.weight, 
+						   p.image_url
+					FROM transactions t
+					INNER JOIN products p ON t.product_id = p.id
+					WHERE t.order_id = ? AND t.active = 1`;
+		let result = await db.query(_sql, id)
 		return result;
 	},
 
@@ -83,14 +117,38 @@ const order = {
 			_sql += "AND o.buyer_id = ?"
 		else
 			_sql += "AND f.seller_id = ?"
+			console.log(_sql)
 		let result = await db.query(_sql, [transition_id, user_id]);
 		return result;
 	},
 
 	async confirmShoppingCart(input) {
 		let _sql = `UPDATE order_forms
-					SET date = ?, pickup_method = ?, pickup_location = ?, payment_method = ?, deposite_method = ?, receipt_url = ?, status = 1
+					SET date = ?, amount =?, pickup_method = ?, pickup_location = ?, payment_method = ?, deposite_method = ?, receipt_url = ?, status = 1
 					WHERE id = ? AND buyer_id = ?`
+		let result = await db.query(_sql, input);
+		return result;
+	},
+
+	async buyerReUploadReceipt(input) {
+		let _sql = `UPDATE order_forms SET receipt_url = ? WHERE id = ? AND buyer_id = ?`
+		let result = await db.query(_sql, input);
+		return result;
+	},
+
+	async sellerEditOrder(input) {
+		let _sql = `UPDATE order_forms o
+					INNER JOIN farms f ON f.id = o.farm_id
+					SET o.amount = ?, o.status = 2
+					WHERE o.id = ? AND f.seller_id = ?`
+		let result = await db.query(_sql, input);
+		return result;
+	},
+
+	async editOrderStatus(input) {
+		let _sql = `UPDATE order_forms o
+					SET o.status = ?
+					WHERE o.id = ?`
 		let result = await db.query(_sql, input);
 		return result;
 	},
