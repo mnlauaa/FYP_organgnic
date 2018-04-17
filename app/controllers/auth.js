@@ -48,7 +48,7 @@ async function postSignUp(ctx) {
         return errHandle(ctx, err);
     }
 
-    let displayNameExist = await authModel.checkUserDisplayNameExist(ctx.request.body.dispaly_name)
+    let displayNameExist = await authModel.checkUserDisplayNameExist(ctx.request.body.display_name)
     if(displayNameExist[0] != null){
         let err = new Error('display name has already been taken'); 
         err.status = 403;
@@ -59,7 +59,7 @@ async function postSignUp(ctx) {
     let newUser = [
         ctx.request.body.username,
         ctx.request.body.password,
-        ctx.request.body.dispaly_name,
+        ctx.request.body.display_name,
         ctx.request.body.phone_number,
         ctx.request.body.address,
         config.USER_IDENTITY.BUYER,
