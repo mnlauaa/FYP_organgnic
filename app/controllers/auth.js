@@ -59,7 +59,7 @@ async function postSignUp(ctx) {
     let newUser = [
         ctx.request.body.username,
         ctx.request.body.password,
-        ctx.request.body.dispaly_name,
+        ctx.request.body.display_name,
         ctx.request.body.phone_number,
         ctx.request.body.address,
         config.USER_IDENTITY.BUYER,
