@@ -34,13 +34,13 @@ async function postLogout(ctx) {
 }
 
 async function postSignUp(ctx) {
-    if(!ctx.request.body.username || !ctx.request.body.password){
+    if(!ctx.req.body.username || !ctx.req.body.password){
         let err = new Error('missing information');
         err.status = 400; 
         return errHandle(ctx, err);
     }
 
-    let userNameExist = await authModel.checkUsernameExist(ctx.request.body.username);
+    let userNameExist = await authModel.checkUsernameExist(ctx.req.body.username);
 
     if(userNameExist[0] != null){
         let err = new Error('username has already been taken'); 
@@ -48,7 +48,7 @@ async function postSignUp(ctx) {
         return errHandle(ctx, err);
     }
 
-    let displayNameExist = await authModel.checkUserDisplayNameExist(ctx.request.body.dispaly_name)
+    let displayNameExist = await authModel.checkUserDisplayNameExist(ctx.req.body.dispaly_name)
     if(displayNameExist[0] != null){
         let err = new Error('display name has already been taken'); 
         err.status = 403;
@@ -57,11 +57,11 @@ async function postSignUp(ctx) {
 
     let iat = Math.floor(Date.now() / 1000) - 30;
     let newUser = [
-        ctx.request.body.username,
-        ctx.request.body.password,
-        ctx.request.body.dispaly_name,
-        ctx.request.body.phone_number,
-        ctx.request.body.address,
+        ctx.req.body.username,
+        ctx.req.body.password,
+        ctx.req.body.dispaly_name,
+        ctx.req.body.phone_number,
+        ctx.req.body.address,
         config.USER_IDENTITY.BUYER,
         iat
     ]
