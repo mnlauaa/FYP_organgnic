@@ -96,11 +96,18 @@ let products = new Router()
     .put('/:id', passport.authenticate('jwt', { session: false }), productUpload.single('product'), productCrtl.putProduct)
 
 let orders = new Router()
-    .get('/:id', orderCrtl.getOederById)
+    .get('/buyer', passport.authenticate('jwt', { session: false }), orderCrtl.getBuyerOrder)
+    .get('/seller', passport.authenticate('jwt', { session: false }), orderCrtl.getSellerOrder)
+    .get('/:id',  passport.authenticate('jwt', { session: false }), orderCrtl.getOederById)
+    
     .post('/', orderCrtl.postOrder)
+    .post('/:id/translation', passport.authenticate('jwt', { session: false }),  orderCrtl.postTransition)
+
     .put('/:id', passport.authenticate('jwt', { session: false }), receiptUpload.single('receipt'), orderCrtl.putOrder)
     .put('/translation/:id', passport.authenticate('jwt', { session: false }), orderCrtl.putTransition)
+    
     .delete('/translation/:id', passport.authenticate('jwt', { session: false }), orderCrtl.deleteTransition)
+    .delete('/:id', passport.authenticate('jwt', { session: false }), orderCrtl.deleteOrder)
 
 let news = new Router()
     .get('/', newsCtrl.getNewsList)
