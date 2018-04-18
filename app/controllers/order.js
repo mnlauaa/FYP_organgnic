@@ -7,6 +7,7 @@ module.exports = {
 	postMyShoppingCart,
 	getOederById,
 	getMyOrder,
+	getMeDebts,
 	getBuyerOrder,
 	getSellerOrder,
 	postOrder,
@@ -88,10 +89,23 @@ async function getOederById(ctx) {
 	ctx.body = order[0];
 }
 
+async function getMeDebts(ctx) {
+	let user_id = ctx.state.user.id
+	let role = ctx.state.user.identity;
+	let debt = await orderModel.findMyFullOrder(user_id, role, 5)
+	console.log(debt)
+	ctx.body = debt
+}
+
 async function getMyOrder(ctx) {
 	let id = ctx.state.user.id;
-	order = await orderModel.findMyFullOrder(id);
-	ctx.body = order;
+	let role = ctx.state.user.identity;
+	let orders = await orderModel.findMyFullOrder(id, role, 6);
+	for(let i = 0; i < orders.length; i++){
+		let transaction = await orderModel.findAllTransacionById(orders[i].id)
+		orders[i].transaction = transaction
+	}
+	ctx.body = orders;
 }
 
 async function getBuyerOrder(ctx){
@@ -159,54 +173,60 @@ async function putOrder(ctx) {
 			order = await orderModel.confirmShoppingCart(input);
 			ctx.body = {success: order};
 		}
-		if(order_status == 1){
+		if(order_status == 1 || order_status == 3 || order_status == 4){
 			console.log(ctx.req.file)
 			let image_url = config.SERVER.IP + 'receipt/' + ctx.req.file.filename;
 			order = await orderModel.buyerReUploadReceipt([image_url, order_id, id]);
 			ctx.body = {success: order};
 		}
 		if(order_status == 2){
-			console.log('hi')
-			let input = [
-				1,
-				order_id
-			]
+			let input = [1, order_id]
+			result = await orderModel.editOrderStatus(input);
+			ctx.body = {success: result};
+		}
+		if(order_status == 5){
+			let image_url = config.SERVER.IP + 'receipt/' + ctx.req.file.filename;
+			order = await orderModel.buyerReUploadReceipt([image_url, order_id, id]);
+			
+			let input = [5, order_id]
 			result = await orderModel.editOrderStatus(input);
 			ctx.body = {success: result};
 		}
 	} else {
 		if(order_status == 1){
 			if(ctx.req.body.way == 'edit'){
-				let input = [
-					ctx.req.body.amount,
-					order_id,
-					id
-				]
+				let input = [ctx.req.body.amount, order_id, id]
 				result = await orderModel.sellerEditOrder(input);
 				ctx.body = {success: result};
 			} else {
-				let input = [
-					3,
-					order_id
-				]
-				result = await orderModel.editOrderStatus(input);
+				let input = [3, order_id]
+				let transacions = await orderModel.findAllTransacionById(id)
+				for(var i = 0; i < transacions.length; i++)
+					await orderModel.sellProduct(transacions[i].product_id, transacions[i].qty);
+				let result = await orderModel.editOrderStatus(input);
 				ctx.body = {success: result};
 			}
 		}
 		if(order_status == 3){
-			let input = [
-				4,
-				order_id
-			]
+			let input = [4, order_id]
 			result = await orderModel.editOrderStatus(input);
 			ctx.body = {success: result};
 		}
 		if(order_status == 4){
+			let input;
 			order = await orderModel.findOrderById(order_id)
-			let input = [
-				4,
-				order_id
-			]
+			if(order[0].payment_method == 1 && !order[0].receipt_url)
+				input = [5, order_id]
+			else{
+				await orderModel.editOrderDate([new Date(), order_id])
+				input = [6, order_id]
+			}
+			result = await orderModel.editOrderStatus(input);
+			ctx.body = {success: result};
+		}
+		if(order_status == 5){
+			let input = [6, order_id];
+			await orderModel.editOrderDate([new Date(), order_id])
 			result = await orderModel.editOrderStatus(input);
 			ctx.body = {success: result};
 		}

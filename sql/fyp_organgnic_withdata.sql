@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2018 at 07:58 PM
+-- Generation Time: Apr 17, 2018 at 04:47 AM
 -- Server version: 10.1.29-MariaDB
 -- PHP Version: 7.2.0
 
@@ -65,7 +65,7 @@ CREATE TABLE `farms` (
 --
 
 INSERT INTO `farms` (`id`, `seller_id`, `about_intro`, `banner_pic_url`, `shipping_cost`, `shipping_margin`, `home_additional_cost`, `bank_deposit_info`, `margin_on`, `coupon_on`, `home_on`, `bank_deposit_on`, `pay_after_on`, `active`) VALUES
-(1, 2, 'Hi, I need some thing here', 'http://vml1wk037.cse.ust.hk:3000/user/banner-1523206819727.png', 0, 0, 0, NULL, 1, 1, 1, 0, 1, 1),
+(1, 2, 'Hi, I need some thing here', 'http://vml1wk037.cse.ust.hk:3000/user/banner-1523206819727.png', 20, 0, 0, 'ABC Bank account: 999-9999-9999 ', 0, 1, 1, 1, 1, 1),
 (2, 3, NULL, NULL, 30, 400, 20, 'HSBC account: 123-456-789-000', 0, 0, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
@@ -148,7 +148,13 @@ CREATE TABLE `order_forms` (
   `id` int(11) UNSIGNED NOT NULL,
   `farm_id` int(11) UNSIGNED DEFAULT NULL,
   `buyer_id` int(11) UNSIGNED DEFAULT NULL,
-  `date` date DEFAULT NULL,
+  `amount` float NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `pickup_method` int(2) DEFAULT NULL,
+  `pickup_location` varchar(1000) DEFAULT NULL,
+  `payment_method` int(2) NOT NULL DEFAULT '0',
+  `deposite_method` int(2) DEFAULT NULL,
+  `receipt_url` varchar(500) DEFAULT NULL,
   `status` int(1) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -157,9 +163,9 @@ CREATE TABLE `order_forms` (
 -- Dumping data for table `order_forms`
 --
 
-INSERT INTO `order_forms` (`id`, `farm_id`, `buyer_id`, `date`, `status`, `active`) VALUES
-(1, 1, 1, '2018-04-04', 0, 1),
-(2, 2, 1, '2018-04-04', 0, 1);
+INSERT INTO `order_forms` (`id`, `farm_id`, `buyer_id`, `amount`, `date`, `pickup_method`, `pickup_location`, `payment_method`, `deposite_method`, `receipt_url`, `status`, `active`) VALUES
+(1, 1, 1, 110, '2018-04-17 08:03:49', 0, 'Home', 0, NULL, NULL, 4, 1),
+(2, 1, 1, 1159, '2018-04-17 08:49:28', 0, 'Home', 1, 1, NULL, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -175,6 +181,9 @@ CREATE TABLE `products` (
   `qty` int(11) NOT NULL,
   `price` int(11) NOT NULL,
   `weight` int(11) DEFAULT NULL,
+  `special_price` float DEFAULT NULL,
+  `special_weight` float DEFAULT NULL,
+  `special_expiry` date DEFAULT NULL,
   `rating` float DEFAULT NULL,
   `rating_number` int(11) DEFAULT NULL,
   `last_update` date DEFAULT NULL,
@@ -186,10 +195,11 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `farm_id`, `name`, `classification`, `qty`, `price`, `weight`, `rating`, `rating_number`, `last_update`, `image_url`, `active`) VALUES
-(1, 1, 'Potato', 8, 10, 45, 600, 14.4, 3, '2018-04-01', 'https://cdn1.medicalnewstoday.com/content/images/articles/280/280579/potatoes-can-be-healthful.jpg', 1),
-(2, 1, 'Sweet Potato', 8, 3, 50, 300, 27, 6, '2018-04-02', 'https://www.burpee.com/dw/image/v2/ABAQ_PRD/on/demandware.static/-/Sites-masterCatalog_Burpee/default/dw367e7208/Images/Product%20Images/prod001584/prod001584.jpg?sw=322&sh=380&sm=fit', 1),
-(3, 2, 'Purple Potato', 8, 5, 46, 400, 36, 8, '2018-04-04', 'http://www.pvmi.org/varieties/images/Purple%20Pelisse_c.jpg', 1);
+INSERT INTO `products` (`id`, `farm_id`, `name`, `classification`, `qty`, `price`, `weight`, `special_price`, `special_weight`, `special_expiry`, `rating`, `rating_number`, `last_update`, `image_url`, `active`) VALUES
+(1, 1, 'Potato', 8, 10, 45, 600, NULL, NULL, NULL, 14.4, 3, '2018-04-01', 'https://cdn1.medicalnewstoday.com/content/images/articles/280/280579/potatoes-can-be-healthful.jpg', 1),
+(2, 1, 'Sweet Potato', 8, 3, 50, 300, NULL, NULL, NULL, 27, 6, '2018-04-02', 'https://www.burpee.com/dw/image/v2/ABAQ_PRD/on/demandware.static/-/Sites-masterCatalog_Burpee/default/dw367e7208/Images/Product%20Images/prod001584/prod001584.jpg?sw=322&sh=380&sm=fit', 1),
+(3, 2, 'Purple Potato', 8, 5, 46, 400, 40, 400, '2018-05-15', 36, 8, '2018-04-15', 'http://www.pvmi.org/varieties/images/Purple%20Pelisse_c.jpg', 1),
+(6, 1, 'rubbish', 5, 10, 999, 15, NULL, NULL, NULL, NULL, NULL, '2018-04-15', 'http://vml1wk037.cse.ust.hk:3000/product/product-1523729210578.png', 1);
 
 -- --------------------------------------------------------
 
@@ -228,12 +238,10 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `order_id`, `product_id`, `qty`, `rating`, `active`) VALUES
-(1, 1, 1, 1, NULL, 1),
-(2, 1, 2, 2, NULL, 1),
-(3, 2, 3, 1, NULL, 1),
-(4, 2, 3, 1, NULL, 1),
-(5, 1, 2, 1, NULL, 1),
-(6, 2, 3, 2, NULL, 1);
+(1, 1, 1, 2, NULL, 1),
+(2, 2, 1, 2, NULL, 1),
+(3, 2, 2, 1, NULL, 1),
+(4, 2, 6, 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -261,9 +269,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `fb_id`, `display_name`, `phone_number`, `address`, `liabilities`, `profile_pic_url`, `identity`, `iat`, `active`) VALUES
-(1, 'test', 'test', NULL, 'SamLau', 27893025, 'Home', 0, 'http://vml1wk037.cse.ust.hk:3000/user/icon-1523333815754.png', 0, '1523633768', 1),
-(2, 'seller', 'seller', NULL, 'BiG FARM', 27999999, 'I don\'t know ', 0, 'http://vml1wk037.cse.ust.hk:3000/user/icon-1523206819727.png', 1, '1523633777', 1),
-(3, 'seller2', 'seller2', NULL, 'HEALITHY FARM', 55555555, 'Hong Kong', 0, 'http://78.media.tumblr.com/21cab5fea7a46ff65a6ca559a2bcf77b/tumblr_owapvnemjP1v7o0xyo6_500.png', 1, '1523633077', 1);
+(1, 'test', 'test', NULL, 'SamLau', 27893025, 'Home', 0, 'http://vml1wk037.cse.ust.hk:3000/user/icon-1523333815754.png', 0, '1523930411', 1),
+(2, 'seller', 'seller', NULL, 'BiG FARM', 27999999, 'I don\'t know ', 0, 'http://vml1wk037.cse.ust.hk:3000/user/icon-1523206819727.png', 1, '1523930849', 1),
+(3, 'seller2', 'seller2', NULL, 'HEALITHY FARM', 55555555, 'Hong Kong', 0, 'http://78.media.tumblr.com/21cab5fea7a46ff65a6ca559a2bcf77b/tumblr_owapvnemjP1v7o0xyo6_500.png', 1, '1523923415', 1);
 
 --
 -- Indexes for dumped tables
@@ -349,7 +357,7 @@ ALTER TABLE `farms`
 -- AUTO_INCREMENT for table `farms_pickup`
 --
 ALTER TABLE `farms_pickup`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `favorite`
@@ -373,7 +381,7 @@ ALTER TABLE `order_forms`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -385,7 +393,7 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
