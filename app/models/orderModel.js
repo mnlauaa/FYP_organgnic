@@ -58,7 +58,7 @@ const order = {
 					INNER JOIN farms f ON o.farm_id = f.id
 					INNER JOIN users u ON f.seller_id = u.id
 					WHERE o.buyer_id = ? AND o.active = 1 AND 
-							(o.status = 1 OR o.status = 2 OR o.status = 3)`;
+							(o.status >= 1 AND o.status <= 5)`;
 		let result = await db.query(_sql, id);
 		return result;
 	},
@@ -68,18 +68,22 @@ const order = {
 					FROM order_forms o
 					INNER JOIN farms f ON o.farm_id = f.id
 					INNER JOIN users u ON o.buyer_id = u.id
-					WHERE f.seller_id = ? AND o.active = 1 AND (o.status = 1 OR o.status = 3 OR o.status = 4)`;
+					WHERE f.seller_id = ? AND o.active = 1 AND (o.status = 1 OR o.status = 3 OR o.status = 4 OR o.status = 5)`;
 		let result = await db.query(_sql, id);
 		return result;
 	},
 
 
-	async findMyFullOrder(id) {
-		let _sql = `SELECT * FROM order_forms o 
-					INNER JOIN transactions t ON o.id = t.order_id
-					INNER JOIN products p ON t.product_id = p.id
-					WHERE o.buyer_id = ? AND status <> ?`;
-		let result = await db.query(_sql, id);
+	async findMyFullOrder(id, role, status) {
+		let _sql =`SELECT o.*, u.display_name, u.id AS seller_id, u.profile_pic_url, f.bank_deposit_info 
+				   FROM order_forms o
+				   INNER JOIN farms f ON o.farm_id = f.id
+				   INNER JOIN users u ON f.seller_id = u.id `
+		if(role == 0)
+			_sql = _sql + `WHERE o.buyer_id = ? AND o.active = 1 AND o.status = ?`;
+		else
+			_sql = _sql + `WHERE f.seller_id = ? AND o.active = 1 AND o.status = ?`;
+		let result = await db.query(_sql, [id, status]);
 		return result;
 	},
 
@@ -150,6 +154,22 @@ const order = {
 					SET o.status = ?
 					WHERE o.id = ?`
 		let result = await db.query(_sql, input);
+		return result;
+	},
+
+	async editOrderDate(input) {
+		let _sql = `UPDATE order_forms o
+					SET date = ?
+					WHERE id = ?`
+		let result = await db.query(_sql, input);
+		return result;
+	},
+
+	async sellProduct(id, qty) {
+		let _sql = `UPDATE products
+					SET qty = qty - ?
+					WHERE id = ?`
+		let result = await db.query(_sql, [qty, id]);
 		return result;
 	},
 
