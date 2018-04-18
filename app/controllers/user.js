@@ -9,7 +9,10 @@ module.exports = {
     getfarmById,
     getFarmList,
     getFarmReview,
+    getFarmisFavorite,
     postMeFarmPickup,
+    postMeFavorite,
+    postFarmReview,
     putMe,
     putMeFarm,
     putMeFarmSetting,
@@ -59,7 +62,18 @@ async function getFarmList(ctx){
 }
 
 async function getFarmReview(ctx){
-    
+    let farm_id = ctx.params.id;
+    let result = await userModel.findFarmReviews(farm_id)
+    ctx.body = result;
+}
+
+async function getFarmisFavorite(ctx){
+    let id = ctx.state.user.id;
+    let farm_id = ctx.params.id;
+    let result = await userModel.findFarmIsFavorite(id, farm_id)
+    let is = result[0] ? true : false
+    console.log(is)
+    ctx.body = {isFarmReview: is}
 }
 
 async function postMeFarmPickup(ctx){
@@ -70,6 +84,26 @@ async function postMeFarmPickup(ctx){
 	ctx.body = {success: result};
 }
 
+async function postMeFavorite(ctx){
+    let id = ctx.state.user.id;
+    let farm_id = ctx.params.id;
+    let result = await userModel.addFavorite(id, farm_id)
+    ctx.body = {success: result}
+}
+
+async function postFarmReview(ctx){
+    let id = ctx.state.user.id;
+    let farm_id = ctx.params.id;
+    let comment = ctx.request.body.comment;
+    let input = [
+        farm_id,
+        id,
+        comment,
+        new Date()
+    ]
+    let result = await userModel.addFarmReview(input)
+    ctx.body = {success: result}
+}
 
 async function putMe(ctx){
     let id = ctx.state.user.id;

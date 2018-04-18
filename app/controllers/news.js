@@ -5,6 +5,7 @@ const config = require('../../config');
 module.exports = {
     getNewsById,
     getNewsList,
+    getFramNewsList,
     postNews,
     putNews,
     deleteNews,
@@ -28,6 +29,12 @@ async function getNewsList(ctx) {
     ctx.body = {news_list: news_list, result_num:result_num[0].num};
 }
 
+async function getFramNewsList(ctx) {
+	let farm_id = ctx.params.id;
+    let news_list = await newsModel.findAllNewsByfarm(farm_id);
+    ctx.body = news_list;
+}
+
 async function postNews(ctx) {
     let id = ctx.state.user.id;
     let news_id = ctx.params.id;
@@ -38,7 +45,8 @@ async function postNews(ctx) {
     
     if(ctx.req.file)
         news_imgae_urlconfig.SERVER.IP + 'news/' + ctx.req.file.filename;
-    
+    if(ctx.req.body.img_url)
+        news_imgae_url = ctx.req.body.img_url;
     let news_parms = [
         farm_id,
         ctx.req.body.title,
