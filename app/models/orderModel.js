@@ -36,6 +36,15 @@ const order = {
 		return result;
 	},
 
+	async countOrderPerDayById(id){
+		let _sql =`SELECT COUNT(DATE_FORMAT(date,'%m-%d')) AS 'number_of_order', DATE_FORMAT(date,'%m-%d') AS 'date_of_order' 
+				   FROM order_forms 
+				   WHERE farm_id = ? AND active = 1 AND DATE_FORMAT(date,'%m')=DATE_FORMAT(NOW(),'%m')
+				   GROUP BY DATE_FORMAT(date,'%m-%d')`;
+		let result = await db.query(_sql, id);
+		return result;
+	},
+
 	async findTransitionById(id) {
 		let _sql = 'SELECT * FROM transactions WHERE id = ? AND active = 1';
 		let result = await db.query(_sql, id);
