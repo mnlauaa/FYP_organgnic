@@ -58,7 +58,7 @@ const products = {
 	},
 
 	async countProductsNumberOfSoldById(id){
-		let _sql =`SELECT SUM(t.product_id*t.qty) AS 'numbers of sold', t.product_id FROM transactions t
+		let _sql =`SELECT SUM(t.product_id*t.qty) AS 'numbers_of_sold', p.name AS 'product_name' FROM transactions t
 					INNER JOIN order_forms o ON t.order_id = o.id
 					INNER JOIN products p ON t.product_id = p.id
 					WHERE o.farm_id = ? AND o.active = 1 AND DATE_FORMAT(o.date,'%m')=DATE_FORMAT(NOW(),'%m')
