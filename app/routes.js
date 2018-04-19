@@ -85,10 +85,12 @@ let me = new Router()
 /* router 2 (/user) */
 let users = new Router()
     .get('/farms', userCtrl.getFarmList)
+    .get('/coupon', passport.authenticate('jwt', { session: false }), userCtrl.getAllCoupon)
     .get('/:id', userCtrl.getUserById)
     .get('/:id/farms', userCtrl.getfarmById)
     .get('/:id/farms/isFavourite', passport.authenticate('jwt', { session: false }), userCtrl.getFarmisFavorite)
     .get('/:id/farms/reviews', userCtrl.getFarmReview)
+    .post('/coupon', passport.authenticate('jwt', { session: false }), userCtrl.postCoupon)
     .post('/:id/farms/reviews', passport.authenticate('jwt', { session: false }), userCtrl.postFarmReview)
 
 let products = new Router()

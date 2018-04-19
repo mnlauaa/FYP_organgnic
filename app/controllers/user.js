@@ -10,9 +10,11 @@ module.exports = {
     getFarmList,
     getFarmReview,
     getFarmisFavorite,
+    getAllCoupon,
     postMeFarmPickup,
     postMeFavorite,
     postFarmReview,
+    postCoupon,
     putMe,
     putMeFarm,
     putMeFarmSetting,
@@ -76,6 +78,12 @@ async function getFarmisFavorite(ctx){
     ctx.body = {isFarmReview: is}
 }
 
+async function getAllCoupon(ctx){
+    let id = ctx.state.user.id;
+    let result = await userModel.findAllCoupon(id)
+    ctx.body = result;
+}
+
 async function postMeFarmPickup(ctx){
     let id = ctx.state.user.id;
     let location = ctx.request.body.location;
@@ -102,6 +110,20 @@ async function postFarmReview(ctx){
         new Date()
     ]
     let result = await userModel.addFarmReview(input)
+    ctx.body = {success: result}
+}
+
+async function postCoupon(ctx){
+    let id = ctx.state.user.id;
+    let user_id = ctx.request.body.buyer_id;
+    let amount = Number(ctx.request.body.amount);
+    let farm = await userModel.findFarmById(id);
+    let farm_id = farm[0].id;
+
+
+    console.log(farm_id)
+    console.log(amount)
+    let result = await userModel.addCoupon([user_id, farm_id, amount])
     ctx.body = {success: result}
 }
 

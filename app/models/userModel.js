@@ -15,7 +15,7 @@ const users = {
 	},
 	
 	async findFavoriteFarms(id) {
-		let _sql = `SELECT fa.farm_id, u.display_name, u.phone_number, u.address, u.profile_pic_url, f.coupon_on
+		let _sql = `SELECT fa.farm_id, u.id AS seller_id, u.display_name, u.phone_number, u.address, u.profile_pic_url, f.coupon_on
 					FROM favorite fa
 					INNER JOIN farms f ON fa.farm_id = f.id
 					INNER JOIN users u ON f.seller_id = u.id
@@ -71,6 +71,16 @@ const users = {
 		return farms;
 	},
 
+	async findAllCoupon(id) {
+		let _sql = `SELECT c.*, u.display_name, u.profile_pic_url
+					FROM coupon c
+					INNER JOIN farms f ON c.farm_id = f.id
+					INNER JOIN users u ON f.seller_id = u.id
+					WHERE c.buyer_id = ?`;
+		let farms = await db.query(_sql, id);
+		return farms;
+	},
+
 	async addFarmPickup(farm_id, location){
 		let _sql = `INSERT INTO farms_pickup (farm_id, location) VALUES (?)`
 		let result = await db.query(_sql, [[farm_id, location]]);
@@ -86,6 +96,19 @@ const users = {
 	async addFarmReview(input){
 		let _sql = `INSERT INTO reviews (farm_id, buyer_id, comment, date) VALUES (?)`
 		let result = await db.query(_sql, [input]);
+		return result;
+	},
+
+	async addCoupon(input){
+		let _sql = `SELECT * FROM coupon WHERE buyer_id = ? AND farm_id = ?`
+		let result = await db.query(_sql, [input[0], input[1]]);
+		if(result[0]){
+			_sql = `UPDATE coupon SET amount = ? WHERE buyer_id = ? AND farm_id = ?`
+			result = await db.query(_sql, [input[2] + result[0].amount, input[0], input[1]]);
+		} else {
+			_sql = `INSERT INTO coupon (buyer_id, farm_id, amount) VALUES (?)`
+			result = await db.query(_sql, [input]);
+		}
 		return result;
 	},
 
