@@ -93,6 +93,7 @@ let products = new Router()
     .get('/related', productCrtl.getRelatedProduct)
     .get('/:id', productCrtl.getProductById)
     .get('/:id/reviews', productCrtl.getProductReview)
+    .get('/stat/:id', productCrtl.getTopSalesProducts)
     .post('/', passport.authenticate('jwt', { session: false }), productUpload.single('product'), productCrtl.postProduct)
     .put('/:id', passport.authenticate('jwt', { session: false }), productUpload.single('product'), productCrtl.putProduct)
 
