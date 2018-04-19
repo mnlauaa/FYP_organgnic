@@ -6,6 +6,7 @@ module.exports = {
     getProductList,
 	getProductById,
 	getRelatedProduct,
+	getTopSalesProducts,
 	getProductReview,
 	postProduct,
 	putProduct
@@ -102,6 +103,15 @@ async function getProductReview(ctx) {
 	let id = ctx.params.id;
 	let review = await productModel.getAllProductReviewById(id);
 	ctx.body = review;
+}
+
+async function getTopSalesProducts(ctx){
+	let id =ctx.state.user.id;
+	let result = await userModel.findFarmById(id);
+	let farm_id = result[0].farm_id;
+
+	let products = await productModel.countProductsNumberOfSoldById(farm_id);
+	ctx.body = products;
 }
 
 async function postProduct(ctx) {
