@@ -9,7 +9,12 @@ module.exports = {
     getfarmById,
     getFarmList,
     getFarmReview,
+    getFarmisFavorite,
+    getAllCoupon,
     postMeFarmPickup,
+    postMeFavorite,
+    postFarmReview,
+    postCoupon,
     putMe,
     putMeFarm,
     putMeFarmSetting,
@@ -59,7 +64,24 @@ async function getFarmList(ctx){
 }
 
 async function getFarmReview(ctx){
-    
+    let farm_id = ctx.params.id;
+    let result = await userModel.findFarmReviews(farm_id)
+    ctx.body = result;
+}
+
+async function getFarmisFavorite(ctx){
+    let id = ctx.state.user.id;
+    let farm_id = ctx.params.id;
+    let result = await userModel.findFarmIsFavorite(id, farm_id)
+    let is = result[0] ? true : false
+    console.log(is)
+    ctx.body = {isFarmReview: is}
+}
+
+async function getAllCoupon(ctx){
+    let id = ctx.state.user.id;
+    let result = await userModel.findAllCoupon(id)
+    ctx.body = result;
 }
 
 async function postMeFarmPickup(ctx){
@@ -70,6 +92,40 @@ async function postMeFarmPickup(ctx){
 	ctx.body = {success: result};
 }
 
+async function postMeFavorite(ctx){
+    let id = ctx.state.user.id;
+    let farm_id = ctx.params.id;
+    let result = await userModel.addFavorite(id, farm_id)
+    ctx.body = {success: result}
+}
+
+async function postFarmReview(ctx){
+    let id = ctx.state.user.id;
+    let farm_id = ctx.params.id;
+    let comment = ctx.request.body.comment;
+    let input = [
+        farm_id,
+        id,
+        comment,
+        new Date()
+    ]
+    let result = await userModel.addFarmReview(input)
+    ctx.body = {success: result}
+}
+
+async function postCoupon(ctx){
+    let id = ctx.state.user.id;
+    let user_id = ctx.request.body.buyer_id;
+    let amount = Number(ctx.request.body.amount);
+    let farm = await userModel.findFarmById(id);
+    let farm_id = farm[0].id;
+
+
+    console.log(farm_id)
+    console.log(amount)
+    let result = await userModel.addCoupon([user_id, farm_id, amount])
+    ctx.body = {success: result}
+}
 
 async function putMe(ctx){
     let id = ctx.state.user.id;

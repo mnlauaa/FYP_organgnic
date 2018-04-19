@@ -3,7 +3,7 @@ const db = require('../utils/database')
 const products = {
 
 	async getProductById(id){
-		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.classification, p.qty, p.price, p.weight, 
+		let _sql = `SELECT p.id, p.farm_id, u.display_name, u.id AS seller_id, p.name, p.classification, p.qty, p.price, p.weight, 
 						   p.special_price, p.special_weight, p.special_expiry,
 						   (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
 					FROM products p 
@@ -15,7 +15,7 @@ const products = {
 	},
 
 	async getAllProducts(order_sql, filter_sql, keyword){
-		let _sql = `SELECT p.id, p.farm_id, u.display_name, p.name, p.classification, p.qty, p.price, p.weight,
+		let _sql = `SELECT p.id, p.farm_id, u.display_name, u.id AS seller_id, p.name, p.classification, p.qty, p.price, p.weight,
 						   p.special_price, p.special_weight, p.special_expiry,
 						   (p.rating / p.rating_number) AS rating, p.last_update, p.image_url 
 					FROM products p 
