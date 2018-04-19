@@ -100,7 +100,7 @@ let orders = new Router()
     .get('/buyer', passport.authenticate('jwt', { session: false }), orderCrtl.getBuyerOrder)
     .get('/seller', passport.authenticate('jwt', { session: false }), orderCrtl.getSellerOrder)
     .get('/:id',  passport.authenticate('jwt', { session: false }), orderCrtl.getOederById)
-    
+    .get('/stat/:id', passport.authenticate('jwt', { session: false }),orderCrtl.getOrderPerDayById)
     .post('/', orderCrtl.postOrder)
     .post('/:id/translation', passport.authenticate('jwt', { session: false }),  orderCrtl.postTransition)
 
