@@ -11,7 +11,7 @@ async function getMyChat(ctx) {
     let id = ctx.state.user.id;
     let chats = await chatModel.findMyChat(id)
     for(var i = 0; i < chats.length; i++){
-        let un_read = await chatModel.countUnReadById(chats[i].sender_id, chats[i].receiver_id)
+        let un_read = await chatModel.countUnReadById(id)
         chats[i].un_read = un_read[0].unRead
     }
     ctx.body = chats
