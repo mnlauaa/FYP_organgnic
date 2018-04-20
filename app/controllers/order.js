@@ -93,7 +93,7 @@ async function getOederById(ctx) {
 }
 
 async function getOrderPerDayById(ctx){
-	let id =ctx.state.user.id;
+	let id = ctx.state.user.id;
 	let result = await userModel.findFarmById(id);
 	let farm_id = result[0].farm_id;
 	

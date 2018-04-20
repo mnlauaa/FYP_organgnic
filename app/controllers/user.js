@@ -118,11 +118,7 @@ async function postCoupon(ctx){
     let user_id = ctx.request.body.buyer_id;
     let amount = Number(ctx.request.body.amount);
     let farm = await userModel.findFarmById(id);
-    let farm_id = farm[0].id;
-
-
-    console.log(farm_id)
-    console.log(amount)
+    let farm_id = farm[0].farm_id;
     let result = await userModel.addCoupon([user_id, farm_id, amount])
     ctx.body = {success: result}
 }
