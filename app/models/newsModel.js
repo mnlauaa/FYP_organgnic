@@ -18,6 +18,15 @@ const news = {
     return news;
     },
 
+    async findAllNewsByfarm(id) {
+      let _sql = `SELECT *
+                  FROM news
+                  WHERE active = 1 AND farm_id = ?
+                  ORDER BY datetime DESC`;
+      let news = await db.query(_sql, id);
+      return news;
+    },
+
     async getSearchResult(keyword){
       let _sql = `SELECT COUNT(n.id) AS num
                   FROM news n

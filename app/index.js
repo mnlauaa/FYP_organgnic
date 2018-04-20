@@ -9,6 +9,8 @@ const routers = require('./routes');
 const config = require('../config');
 const db = require('./utils/database');
 const auth = require('./auth');
+const ioCtrl = require('./utils/socketio')
+
 
 const app = new Koa();
 auth.init();
@@ -19,16 +21,11 @@ app.use(logger())
     .use(bodyParser())
     .use(passport.initialize())
     .use(serve('uploads'))
-    .use(routers.routes())
-//   catch err
-    // .use(async (ctx, next)=>{
-    //     try {
-    //         await next()
-    //     }catch(err) {
-    //         ctx.body = err.message
-    //         ctx.status = err.status || 500
-    //     }
-    // })
-    .listen(config.PORT);
+    .use(routers.routes());
+    // .listen(config.PORT);
+
+const server = require('http').createServer(app.callback());
+ioCtrl.init(server)
+server.listen(config.PORT);
 
 console.log("localhost:" + config.PORT);
