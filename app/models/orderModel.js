@@ -39,7 +39,7 @@ const order = {
 	async countOrderPerDayById(id){
 		let _sql =`SELECT COUNT(DATE_FORMAT(date,'%m-%d')) AS 'number_of_order', DATE_FORMAT(date,'%m-%d') AS 'date_of_order' 
 				   FROM order_forms 
-				   WHERE farm_id = ? AND active = 1 AND DATE_FORMAT(date,'%m')=DATE_FORMAT(NOW(),'%m')
+				   WHERE farm_id = ? AND active = 1 AND status = 6 AND DATE_FORMAT(date,'%m')=DATE_FORMAT(NOW(),'%m')
 				   GROUP BY DATE_FORMAT(date,'%m-%d')`;
 		let result = await db.query(_sql, id);
 		return result;
@@ -49,7 +49,7 @@ const order = {
 		let _sql =`SELECT (FLOOR((DayOfMonth(date)-1)/7)+1) AS 'week_of_this_month', 
 					COUNT(*) AS 'number_of_orders'
 					FROM order_forms 
-					WHERE farm_id = ? AND active = 1 AND DATE_FORMAT(date,'%m')=DATE_FORMAT(NOW(),'%m')
+					WHERE farm_id = ? AND active = 1 AND status = 6 AND DATE_FORMAT(date,'%m')=DATE_FORMAT(NOW(),'%m')
 					GROUP BY (FLOOR((DayOfMonth(date)-1)/7)+1)`;
 		let result = await db.query(_sql, id);
 		return result;
@@ -58,7 +58,7 @@ const order = {
 	async countOrderPerMonthById(id){
 		let _sql =`SELECT DATE_FORMAT(date,'%M')AS 'month_of_this_year', COUNT(*) AS 'number_of_orders'
 					FROM order_forms 
-					WHERE farm_id = ? AND active = 1 AND DATE_FORMAT(date,'%y')=DATE_FORMAT(NOW(),'%y')
+					WHERE farm_id = ? AND active = 1 AND status = 6 AND DATE_FORMAT(date,'%y')=DATE_FORMAT(NOW(),'%y')
 					GROUP BY DATE_FORMAT(date,'%m')`;
 		let result = await db.query(_sql, id);
 		return result;
