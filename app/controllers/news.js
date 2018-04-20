@@ -44,7 +44,7 @@ async function postNews(ctx) {
     let news_imgae_url = null;
     
     if(ctx.req.file)
-        news_imgae_urlconfig.SERVER.IP + 'news/' + ctx.req.file.filename;
+        news_imgae_url = config.SERVER.IP + 'news/' + ctx.req.file.filename;
     if(ctx.req.body.img_url)
         news_imgae_url = ctx.req.body.img_url;
     let news_parms = [
