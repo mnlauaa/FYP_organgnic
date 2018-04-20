@@ -7,6 +7,8 @@ module.exports = {
 	postMyShoppingCart,
 	getOederById,
 	getOrderPerDayById,
+	getOrderPerWeekById,
+	getOrderPerMonthById,
 	getMyOrder,
 	getMeDebts,
 	getBuyerOrder,
@@ -98,6 +100,25 @@ async function getOrderPerDayById(ctx){
 	let orders = await orderModel.countOrderPerDayById(farm_id);
 	ctx.body = orders;
 }
+
+async function getOrderPerWeekById(ctx){
+	let id =ctx.state.user.id;
+	let result = await userModel.findFarmById(id);
+	let farm_id = result[0].farm_id;
+	
+	let orders = await orderModel.countOrderPerWeekById(farm_id);
+	ctx.body = orders;
+}
+
+async function getOrderPerMonthById(ctx){
+	let id =ctx.state.user.id;
+	let result = await userModel.findFarmById(id);
+	let farm_id = result[0].farm_id;
+	
+	let orders = await orderModel.countOrderPerMonthById(farm_id);
+	ctx.body = orders;
+}
+
 async function getMeDebts(ctx) {
 	let user_id = ctx.state.user.id
 	let role = ctx.state.user.identity;
