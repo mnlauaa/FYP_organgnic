@@ -45,6 +45,25 @@ const order = {
 		return result;
 	},
 
+	async countOrderPerWeekById(id){
+		let _sql =`SELECT (FLOOR((DayOfMonth(date)-1)/7)+1) AS 'week_of_this_month', 
+					COUNT(*) AS 'number_of_orders'
+					FROM order_forms 
+					WHERE farm_id = ? AND active = 1 AND DATE_FORMAT(date,'%m')=DATE_FORMAT(NOW(),'%m')
+					GROUP BY (FLOOR((DayOfMonth(date)-1)/7)+1)`;
+		let result = await db.query(_sql, id);
+		return result;
+	},
+
+	async countOrderPerMonthById(id){
+		let _sql =`SELECT DATE_FORMAT(date,'%M')AS 'month_of_this_year', COUNT(*) AS 'number_of_orders'
+					FROM order_forms 
+					WHERE farm_id = ? AND active = 1 AND DATE_FORMAT(date,'%y')=DATE_FORMAT(NOW(),'%y')
+					GROUP BY DATE_FORMAT(date,'%m')`;
+		let result = await db.query(_sql, id);
+		return result;
+	},
+
 	async findTransitionById(id) {
 		let _sql = 'SELECT * FROM transactions WHERE id = ? AND active = 1';
 		let result = await db.query(_sql, id);
