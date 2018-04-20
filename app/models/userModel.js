@@ -162,6 +162,14 @@ const users = {
 		let result = await db.query(_sql, [column, value, id, item_id]);
 		return result;
 	},
+	
+	async updateCoupon(reduce, id) {
+		let _sql = `UPDATE coupon 
+					SET amount = (amount - ?)
+					WHERE id = ?`;
+		let farms = await db.query(_sql, [reduce, id]);
+		return farms;
+	},
 
 	async deleteMyFavorite(id, farm_id){
 		let _sql = `UPDATE favorite SET active = 0 WHERE buyer_id = ? AND farm_id = ?`

@@ -188,6 +188,7 @@ async function putOrder(ctx) {
 			let image_url = null
 			if(ctx.req.file)
 				image_url = config.SERVER.IP + 'receipt/' + ctx.req.file.filename;
+			let coupon = false
 			let input = [
 				date,
 				ctx.req.body.amount,
@@ -197,10 +198,15 @@ async function putOrder(ctx) {
 				ctx.req.body.deposite_method || null,
 				image_url || null,
 				order_id,
-				id
-			]
+				id]
+
+			if(ctx.req.body.reduce && ctx.req.body.coupon_id){
+				await userModel.updateCoupon(Number(ctx.req.body.reduce), ctx.req.body.coupon_id)
+				input.unshift(ctx.req.body.reduce);
+				coupon = true;
+			}
 			console.log("input", input)
-			order = await orderModel.confirmShoppingCart(input);
+			order = await orderModel.confirmShoppingCart(input, coupon);
 			ctx.body = {success: order};
 		}
 		if(order_status == 1 || order_status == 3 || order_status == 4){
