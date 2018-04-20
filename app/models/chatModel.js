@@ -20,7 +20,7 @@ const chat = {
     async countUnReadById(receive, sender){
         let _sql = `SELECT COUNT(*) AS unRead 
                     FROM chat_logs 
-                    WHERE sender_id  = ? AND  receiver_id = ? AND _read = 0`
+                    WHERE receiver_id = ? AND sender_id = ? AND _read = 0`
         let result = await db.query(_sql, [receive, sender])
         return result;
     },
