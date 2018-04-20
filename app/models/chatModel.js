@@ -28,7 +28,7 @@ const chat = {
     async countAllUnRead(user_id){
         let _sql = `SELECT COUNT(*) AS unRead 
                     FROM chat_logs 
-                    WHERE (sender_id  = ? OR  receiver_id = ?) AND _read = 0`
+                    WHERE receiver_id = ? AND _read = 0`
         let result = await db.query(_sql, [user_id, user_id])
         return result;
     },
@@ -65,8 +65,8 @@ const chat = {
     async readChat(user_id, other_id){
         let _sql = `UPDATE chat_logs c
                     SET _read = 1
-                    WHERE (c.sender_id  = ? AND  c.receiver_id = ?) OR (c.sender_id  = ? AND  c.receiver_id = ?)`
-        let result = await db.query(_sql, [user_id, other_id, other_id, user_id])
+                    WHERE (c.sender_id  = ? AND  c.receiver_id = ?)`
+        let result = await db.query(_sql, [other_id, user_id])
         return result;
     }
 }
