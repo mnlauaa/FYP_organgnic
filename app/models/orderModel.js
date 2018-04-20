@@ -154,10 +154,12 @@ const order = {
 		return result;
 	},
 
-	async confirmShoppingCart(input) {
-		let _sql = `UPDATE order_forms
-					SET date = ?, amount =?, pickup_method = ?, pickup_location = ?, payment_method = ?, deposite_method = ?, receipt_url = ?, status = 1
-					WHERE id = ? AND buyer_id = ?`
+	async confirmShoppingCart(input, coupon) {
+		let _sql = `UPDATE order_forms SET `
+		if(coupon)
+			_sql = _sql + `coupon_reduce = ?, `
+		_sql = _sql + `date = ?, amount =?, pickup_method = ?, pickup_location = ?, payment_method = ?, deposite_method = ?, receipt_url = ?, status = 1
+					   WHERE id = ? AND buyer_id = ?`
 		let result = await db.query(_sql, input);
 		return result;
 	},
